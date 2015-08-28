@@ -5,7 +5,6 @@ import hpoweb.data.entities.SearchableEntity;
 import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -56,6 +55,14 @@ public class LazySearchbarService {
 					all.add(entityAlt);
 				}
 
+			}
+
+			for (OWLClass cls : hpdata.getExtOwlOntology().getAllClasses()) {
+				// filter hp-classes -> iri must contain HP_
+				if (!cls.getIRI().toString().contains("HP_"))
+					continue;
+				String hpId = OboUtil.IRI2ID(cls.getIRI());
+
 				String textDef = hpdata.getExtOwlOntology().getTextdefForClass(cls);
 				if (textDef != null) {
 					SearchableEntity entityTextdef = new SearchableEntity(textDef, hpId, SearchableEntityType.HPO);
@@ -99,10 +106,6 @@ public class LazySearchbarService {
 				}
 			}
 
-			/*
-			 * Sort search entries alphatically
-			 */
-			Collections.sort(all);
 		}
 		else {
 			Random r = new Random(System.currentTimeMillis());

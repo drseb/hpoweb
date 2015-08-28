@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -29,8 +30,8 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 	private ImmutableSet<String> alternativeIds;
 	private String primaryId;
 	private String iriString;
-	private ImmutableSet<OWLClass> superClasses;
-	private ImmutableSet<OWLClass> subClasses;
+	private Set<OWLClass> superClasses;
+	private Set<OWLClass> subClasses;
 	private GraphtestUI graphUi;
 	private ImmutableSet<String> synonyms;
 	private String textdef;
@@ -49,8 +50,18 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 		this.primaryId = OboUtil.IRI2ID(hpClass.getIRI());
 		this.iriString = hpClass.getIRI().toString();
 
-		this.superClasses = hpData.getExtOwlOntology().getParents(hpClass);
-		this.subClasses = hpData.getExtOwlOntology().getChildren(hpClass);
+		ImmutableSet<OWLClass> superClassesTmp = hpData.getExtOwlOntology().getParents(hpClass);
+		superClasses = new HashSet<OWLClass>();
+		for (OWLClass cls : superClassesTmp)
+			if (cls.getIRI().toString().contains("HP_"))
+				superClasses.add(cls);
+
+		ImmutableSet<OWLClass> subClassesTmp = hpData.getExtOwlOntology().getChildren(hpClass);
+		subClasses = new HashSet<OWLClass>();
+		for (OWLClass cls : subClassesTmp)
+			if (cls.getIRI().toString().contains("HP_"))
+				subClasses.add(cls);
+
 		this.synonyms = hpData.getExtOwlOntology().getSynonymsForClass(hpClass);
 		this.textdef = hpData.getExtOwlOntology().getTextdefForClass(hpClass);
 		this.logicaldef = hpData.getExtOwlOntology().getLogicalDefForClassForVaadin(hpClass);
@@ -66,7 +77,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 	 * @return the superClasses
 	 */
 	@Override
-	public ImmutableSet<OWLClass> getSuperClasses() {
+	public Set<OWLClass> getSuperClasses() {
 		return superClasses;
 	}
 
@@ -74,7 +85,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 	 * @return the subClasses
 	 */
 	@Override
-	public ImmutableSet<OWLClass> getSubClasses() {
+	public Set<OWLClass> getSubClasses() {
 		return subClasses;
 	}
 

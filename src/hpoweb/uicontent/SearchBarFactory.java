@@ -64,7 +64,9 @@ public class SearchBarFactory {
 				else if (event.getValue().getType().equals(SearchableEntityType.Disease)) {
 					searchParameter = CONSTANTS.diseaseRequestId;
 				}
+
 				String searchValue = event.getValue().getSearchValue();
+
 				Page.getCurrent().setLocation(CONSTANTS.rootLocation + "?" + searchParameter + "=" + searchValue);
 			}
 		});

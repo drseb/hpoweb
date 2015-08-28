@@ -1941,7 +1941,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .hpoweb .v-margin-bottom {
-	padding-bottom: 32px;
+	padding-bottom: 5px;
 }
 
 .hpoweb .v-margin-left {
@@ -3969,7 +3969,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .hpoweb [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
-	padding-bottom: 32px;
+	padding-bottom: 5px;
 }
 
 .hpoweb [class*="margin-left"] > tbody > [class*="row"] > [class*="captioncell"] {
@@ -6967,7 +6967,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .hpoweb .v-gridlayout-margin-bottom {
-	padding-bottom: 32px;
+	padding-bottom: 5px;
 }
 
 .hpoweb .v-gridlayout-margin-left {

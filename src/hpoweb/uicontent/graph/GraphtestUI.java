@@ -2,6 +2,9 @@ package hpoweb.uicontent.graph;
 
 import hpoweb.data.HpData;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -64,10 +67,20 @@ public class GraphtestUI {
 		repo.setHomeNodeId(classId);
 
 		if (!isFake) {
-			ImmutableSet<OWLClass> superclasses = hpData.getExtOwlOntology().getParents(hpClass);
-			ImmutableSet<OWLClass> subclasses = hpData.getExtOwlOntology().getChildren(hpClass);
+			ImmutableSet<OWLClass> superclassesTmp = hpData.getExtOwlOntology().getParents(hpClass);
+			ImmutableSet<OWLClass> subclassesTmp = hpData.getExtOwlOntology().getChildren(hpClass);
 
-			for (OWLClass superclass : superclasses) {
+			Set<OWLClass> superClasses = new HashSet<OWLClass>();
+			for (OWLClass cls : superclassesTmp)
+				if (cls.getIRI().toString().contains("HP_"))
+					superClasses.add(cls);
+
+			Set<OWLClass> subClasses = new HashSet<OWLClass>();
+			for (OWLClass cls : subclassesTmp)
+				if (cls.getIRI().toString().contains("HP_"))
+					subClasses.add(cls);
+
+			for (OWLClass superclass : superClasses) {
 
 				String supLabel = hpData.getExtOwlOntology().getLabel(superclass.getIRI());
 				String supClassId = OboUtil.IRI2ID(superclass.getIRI());
@@ -88,7 +101,7 @@ public class GraphtestUI {
 
 			}
 
-			for (OWLClass subclass : subclasses) {
+			for (OWLClass subclass : subClasses) {
 
 				String subLabel = hpData.getExtOwlOntology().getLabel(subclass.getIRI());
 				String subClassId = OboUtil.IRI2ID(subclass.getIRI());
