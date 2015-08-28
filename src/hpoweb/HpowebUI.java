@@ -96,8 +96,11 @@ public class HpowebUI extends UI {
 		searchBar.setWidth("100%");
 		IEntityDataProvider dataProvider = null;
 
-		tracker = new GoogleAnalyticsTracker("UA-62837903-2", "human-phenotype-ontology.org");
+		tracker = new GoogleAnalyticsTracker("UA-62837903-2");
+		addExtension(tracker);
 		tracker.extend(UI.getCurrent());
+		tracker.extend(this);
+		tracker.trackPageview(Page.getCurrent().toString());
 
 		if (parameterMap.containsKey(CONSTANTS.hpRequestId)) {
 
