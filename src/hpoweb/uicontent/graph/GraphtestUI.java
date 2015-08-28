@@ -70,11 +70,17 @@ public class GraphtestUI {
 			ImmutableSet<OWLClass> superclassesTmp = hpData.getExtOwlOntology().getParents(hpClass);
 			ImmutableSet<OWLClass> subclassesTmp = hpData.getExtOwlOntology().getChildren(hpClass);
 
+			/*
+			 * Filter superclasses to HP-set
+			 */
 			Set<OWLClass> superClasses = new HashSet<OWLClass>();
 			for (OWLClass cls : superclassesTmp)
 				if (cls.getIRI().toString().contains("HP_"))
 					superClasses.add(cls);
 
+			/*
+			 * Filter subclasses to HP-set
+			 */
 			Set<OWLClass> subClasses = new HashSet<OWLClass>();
 			for (OWLClass cls : subclassesTmp)
 				if (cls.getIRI().toString().contains("HP_"))

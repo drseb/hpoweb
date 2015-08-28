@@ -51,11 +51,17 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 		this.iriString = hpClass.getIRI().toString();
 
 		ImmutableSet<OWLClass> superClassesTmp = hpData.getExtOwlOntology().getParents(hpClass);
+		/*
+		 * Filter superclasses to HP-set
+		 */
 		superClasses = new HashSet<OWLClass>();
 		for (OWLClass cls : superClassesTmp)
 			if (cls.getIRI().toString().contains("HP_"))
 				superClasses.add(cls);
 
+		/*
+		 * Filter subclasses to HP-set
+		 */
 		ImmutableSet<OWLClass> subClassesTmp = hpData.getExtOwlOntology().getChildren(hpClass);
 		subClasses = new HashSet<OWLClass>();
 		for (OWLClass cls : subClassesTmp)
