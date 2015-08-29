@@ -100,7 +100,7 @@ public class HpowebUI extends UI {
 		addExtension(tracker);
 		tracker.extend(UI.getCurrent());
 		tracker.extend(this);
-		tracker.trackPageview(Page.getCurrent().toString());
+		tracker.trackPageview(Page.getCurrent().getLocation().toString());
 
 		if (parameterMap.containsKey(CONSTANTS.hpRequestId)) {
 
@@ -113,13 +113,11 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
@@ -131,13 +129,11 @@ public class HpowebUI extends UI {
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
 			DiseaseId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
@@ -149,12 +145,10 @@ public class HpowebUI extends UI {
 			if (doParseHpo) {
 
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		}
-		else {
+		} else {
 			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
 					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true).show(Page
 					.getCurrent());
@@ -184,14 +178,12 @@ public class HpowebUI extends UI {
 			HpoClassTabFactory hpoClassTabFactory = new HpoClassTabFactory(hpData);
 			hpoClassTabFactory.addTermInfoTabs(sheet, (IHpClassDataProvider) dataProvider);
 
-		}
-		else if (dataProvider instanceof IDiseaseDataProvider) {
+		} else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(hpData);
 			diseaseTabFactory.addDiseaseInfoTabs(sheet, (IDiseaseDataProvider) dataProvider);
 
-		}
-		else if (dataProvider instanceof IGeneDataProvider) {
+		} else if (dataProvider instanceof IGeneDataProvider) {
 
 			GeneTabFactory geneTabFactory = new GeneTabFactory(hpData);
 			geneTabFactory.addGeneInfoTabs(sheet, (IGeneDataProvider) dataProvider);
