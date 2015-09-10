@@ -48,9 +48,9 @@ import de.charite.phenowl.annotations.DiseaseId;
 public class HpowebUI extends UI {
 
 	private static final boolean doParseHpo = true;
-	private static Object block = new Object();
+	private final static Object block = new Object();
 
-	private HpData hpData = null;
+	private static HpData hpData = null;
 	private GoogleAnalyticsTracker tracker;
 
 	@WebServlet(value = "/*", asyncSupported = true)

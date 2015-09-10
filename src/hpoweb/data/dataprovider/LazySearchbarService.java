@@ -5,6 +5,7 @@ import hpoweb.data.entities.SearchableEntity;
 import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -27,6 +28,7 @@ public class LazySearchbarService {
 	public LazySearchbarService(HpData hpdata) {
 
 		all = new ArrayList<SearchableEntity>();
+		HashSet<String> alreadyAddedSearchFields = new HashSet<String>();
 
 		if (hpdata != null) {
 
@@ -41,18 +43,22 @@ public class LazySearchbarService {
 				String hpId = OboUtil.IRI2ID(cls.getIRI());
 				String searchAble = hpId + " " + label;
 				SearchableEntity entity = new SearchableEntity(searchAble, hpId, SearchableEntityType.HPO);
-				all.add(entity);
+
+				addIfNew(all, entity, alreadyAddedSearchFields);
 
 				for (String syn : hpdata.getExtOwlOntology().getSynonymsForClass(cls)) {
 					String searchAbleSyn = hpId + " " + syn;
 					SearchableEntity entitySyn = new SearchableEntity(searchAbleSyn, hpId, SearchableEntityType.HPO);
-					all.add(entitySyn);
+					// all.add(entitySyn);
+					addIfNew(all, entitySyn, alreadyAddedSearchFields);
 				}
 
 				for (String altId : hpdata.getExtOwlOntology().getAlternativeIdsForClass(cls)) {
 					String searchAbleAlt = hpId + " " + altId;
 					SearchableEntity entityAlt = new SearchableEntity(searchAbleAlt, hpId, SearchableEntityType.HPO);
-					all.add(entityAlt);
+					// all.add(entityAlt);
+					addIfNew(all, entityAlt, alreadyAddedSearchFields);
+
 				}
 
 			}
@@ -66,13 +72,17 @@ public class LazySearchbarService {
 				String textDef = hpdata.getExtOwlOntology().getTextdefForClass(cls);
 				if (textDef != null) {
 					SearchableEntity entityTextdef = new SearchableEntity(textDef, hpId, SearchableEntityType.HPO);
-					all.add(entityTextdef);
+					// all.add(entityTextdef);
+					addIfNew(all, entityTextdef, alreadyAddedSearchFields);
+
 				}
 
 				String logicalDef = hpdata.getExtOwlOntology().getLogicalDefForClass(cls);
 				if (logicalDef != null) {
 					SearchableEntity entityLogicaldef = new SearchableEntity(logicalDef, hpId, SearchableEntityType.HPO);
-					all.add(entityLogicaldef);
+					// all.add(entityLogicaldef);
+					addIfNew(all, entityLogicaldef, alreadyAddedSearchFields);
+
 				}
 			}
 
@@ -86,11 +96,15 @@ public class LazySearchbarService {
 				String searchAble = diseaseId + " " + diseaseEntry.getName();
 
 				SearchableEntity entity = new SearchableEntity(searchAble, diseaseId, SearchableEntityType.Disease);
-				all.add(entity);
+				// all.add(entity);
+				addIfNew(all, entity, alreadyAddedSearchFields);
+
 				for (String altName : diseaseEntry.getAlternativeNames()) {
 					String searchAbleAlt = diseaseId + " " + altName;
 					SearchableEntity entityAlt = new SearchableEntity(searchAbleAlt, diseaseId, SearchableEntityType.Disease);
-					all.add(entityAlt);
+					// all.add(entityAlt);
+					addIfNew(all, entityAlt, alreadyAddedSearchFields);
+
 				}
 			}
 			/*
@@ -102,7 +116,9 @@ public class LazySearchbarService {
 					String geneId = entrezId + "";
 					String searchAble = diseaseGeneMapper.entrez2symbol.get(entrezId) + " / " + geneId;
 					SearchableEntity entity = new SearchableEntity(searchAble, geneId, SearchableEntityType.Gene);
-					all.add(entity);
+					// all.add(entity);
+					addIfNew(all, entity, alreadyAddedSearchFields);
+
 				}
 			}
 
@@ -126,6 +142,16 @@ public class LazySearchbarService {
 				all.add(entityAlt);
 			}
 		}
+	}
+
+	private void addIfNew(List<SearchableEntity> all2, SearchableEntity entity, HashSet<String> alreadyAddedSearchFields) {
+
+		String label = entity.getLabel();
+		if (!alreadyAddedSearchFields.contains(label)) {
+			alreadyAddedSearchFields.add(label);
+			all2.add(entity);
+		}
+
 	}
 
 	public List<SearchableEntity> findMatches(String filter, int startIndex, int maxResults) {
