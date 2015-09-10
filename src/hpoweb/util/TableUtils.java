@@ -19,20 +19,19 @@ import de.charite.phenowl.annotations.DiseaseEntry;
 
 public class TableUtils {
 
-	public static void addDownloadButtons(VerticalLayout tableVL, final Table table) {
+	public void addDownloadButtons(VerticalLayout tableVL, final Table table) {
 		final ThemeResource exportExcel = new ThemeResource("img/table-excel-20px.png");
 		final Button excelExportButton = new Button("Export to Excel");
 		excelExportButton.setIcon(exportExcel);
 
 		excelExportButton.addClickListener(new Button.ClickListener() {
-			private static final long serialVersionUID = -73954695086117200L;
-			private ExcelExport excelExport;
 
 			public void buttonClick(final ClickEvent event) {
-				excelExport = new ExcelExport(table);
+				ExcelExport excelExport = new ExcelExport(table);
 				excelExport.excludeCollapsedColumns();
 				excelExport.setReportTitle("Excel export");
 				excelExport.export();
+				excelExport = null;
 			}
 		});
 
@@ -41,14 +40,13 @@ public class TableUtils {
 		csvExportButton.setIcon(exportCsv);
 
 		csvExportButton.addClickListener(new Button.ClickListener() {
-			private static final long serialVersionUID = -339546942117200L;
-			private CsvExport csvExport;
 
 			public void buttonClick(final ClickEvent event) {
-				csvExport = new CsvExport(table);
+				CsvExport csvExport = new CsvExport(table);
 				csvExport.excludeCollapsedColumns();
 				csvExport.setReportTitle("CSV Export");
 				csvExport.export();
+				csvExport = null;
 			}
 		});
 
@@ -60,7 +58,7 @@ public class TableUtils {
 		tableVL.setComponentAlignment(hlButtons, Alignment.BOTTOM_RIGHT);
 	}
 
-	public static String getGenesAsHtmlString(ArrayList<DiseaseGene> associatedGenes, String oldLocation) {
+	public String getGenesAsHtmlString(ArrayList<DiseaseGene> associatedGenes, String oldLocation) {
 		ArrayList<String> elems = new ArrayList<String>();
 		for (DiseaseGene g : associatedGenes) {
 			String gStr = g.getGeneSymbol() + " (<a href='" + oldLocation + "?" + CONSTANTS.geneRequestId + "=" + g.getGeneId() + "'>"
@@ -71,7 +69,7 @@ public class TableUtils {
 		return Joiner.on(", ").join(elems);
 	}
 
-	public static String getDiseasesAsHtmlString(ArrayList<DiseaseEntry> associatedDiseases, String oldLocation) {
+	public String getDiseasesAsHtmlString(ArrayList<DiseaseEntry> associatedDiseases, String oldLocation) {
 		ArrayList<String> elems = new ArrayList<String>();
 		for (DiseaseEntry disease : associatedDiseases) {
 			String nameShort = disease.getName();

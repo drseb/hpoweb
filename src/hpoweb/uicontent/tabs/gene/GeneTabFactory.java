@@ -1,6 +1,5 @@
 package hpoweb.uicontent.tabs.gene;
 
-import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
 import hpoweb.uicontent.table.TableLabel;
@@ -20,10 +19,10 @@ import de.charite.phenowl.annotations.DiseaseEntry;
 
 public class GeneTabFactory {
 
-	private HpData hpData;
+	private TableUtils tableUtils;
 
-	public GeneTabFactory(HpData hpData) {
-		this.hpData = hpData;
+	public GeneTabFactory(TableUtils tableUtils) {
+		this.tableUtils = tableUtils;
 	}
 
 	public void addGeneInfoTabs(TabSheet sheet, IGeneDataProvider dataProvider) {
@@ -49,7 +48,8 @@ public class GeneTabFactory {
 			Label l = new Label("No diseases associated with this gene.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		} else {
+		}
+		else {
 			for (DiseaseEntry disease : diseases) {
 				Label l = new Label(disease.getName() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
 						+ disease.getDiseaseIdAsString() + "'>" + disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
@@ -87,7 +87,7 @@ public class GeneTabFactory {
 
 		tableVL.addComponent(table);
 
-		TableUtils.addDownloadButtons(tableVL, table);
+		tableUtils.addDownloadButtons(tableVL, table);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		return tableVL;

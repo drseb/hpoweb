@@ -1,6 +1,5 @@
 package hpoweb.uicontent.tabs.disease;
 
-import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.entities.DiseaseGene;
 import hpoweb.uicontent.table.HpoClassTableEntry;
@@ -19,10 +18,11 @@ import com.vaadin.ui.VerticalLayout;
 
 public class DiseaseTabFactory {
 
-	private HpData hpData;
+	// private HpData hpData;
+	private TableUtils tableUtils;
 
-	public DiseaseTabFactory(HpData hpData) {
-		this.hpData = hpData;
+	public DiseaseTabFactory(TableUtils utils) {
+		this.tableUtils = utils;
 	}
 
 	public void addDiseaseInfoTabs(TabSheet sheet, IDiseaseDataProvider dataProvider) {
@@ -54,7 +54,8 @@ public class DiseaseTabFactory {
 			Label l = new Label("No genes associated with this disease.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		} else {
+		}
+		else {
 			for (DiseaseGene gene : genes) {
 				Label l = new Label(gene.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId + "="
 						+ gene.getGeneId() + "'>" + gene.getGeneId() + "</a>)", ContentMode.HTML);
@@ -92,7 +93,7 @@ public class DiseaseTabFactory {
 
 		tableVL.addComponent(table);
 
-		TableUtils.addDownloadButtons(tableVL, table);
+		tableUtils.addDownloadButtons(tableVL, table);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		return tableVL;
@@ -106,7 +107,8 @@ public class DiseaseTabFactory {
 			Label l = new Label("No synonyms or alternative names");
 			l.addStyleName("tab-content-content");
 			vl_syns.addComponent(l);
-		} else {
+		}
+		else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");

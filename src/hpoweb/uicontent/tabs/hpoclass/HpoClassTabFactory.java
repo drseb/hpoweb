@@ -29,9 +29,11 @@ import de.charite.phenowl.hpowl.util.OboUtil;
 public class HpoClassTabFactory {
 
 	private HpData hpData;
+	private TableUtils tableUtils;
 
-	public HpoClassTabFactory(HpData hpData) {
+	public HpoClassTabFactory(HpData hpData, TableUtils tableUtils) {
 		this.hpData = hpData;
+		this.tableUtils = tableUtils;
 	}
 
 	public void addTermInfoTabs(TabSheet sheet, IHpClassDataProvider dataProvider) {
@@ -98,7 +100,7 @@ public class HpoClassTabFactory {
 			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId
 					+ "=" + entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
 
-			String diseasesString = TableUtils.getDiseasesAsHtmlString(entry.getAssociatedDiseases(), CONSTANTS.rootLocation);
+			String diseasesString = tableUtils.getDiseasesAsHtmlString(entry.getAssociatedDiseases(), CONSTANTS.rootLocation);
 
 			TableLabel diseases = new TableLabel(diseasesString, ContentMode.HTML);
 			Integer itemId = new Integer(id++);
@@ -106,7 +108,7 @@ public class HpoClassTabFactory {
 		}
 
 		tableVL.addComponent(table);
-		TableUtils.addDownloadButtons(tableVL, table);
+		tableUtils.addDownloadButtons(tableVL, table);
 
 		tableVL.setExpandRatio(table, 1f);
 		tableVL.addStyleName("tab-content-vl");
@@ -131,7 +133,7 @@ public class HpoClassTabFactory {
 					+ entry.getDiseaseId() + "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
 			TableLabel diseasename = new TableLabel(entry.getDiseaseName(), ContentMode.HTML);
 
-			String genesString = TableUtils.getGenesAsHtmlString(entry.getAssociatedGenes(), CONSTANTS.rootLocation);
+			String genesString = tableUtils.getGenesAsHtmlString(entry.getAssociatedGenes(), CONSTANTS.rootLocation);
 
 			TableLabel genes = new TableLabel(genesString, ContentMode.HTML);
 			Integer itemId = new Integer(id++);
@@ -140,7 +142,7 @@ public class HpoClassTabFactory {
 
 		tableVL.addComponent(table);
 
-		TableUtils.addDownloadButtons(tableVL, table);
+		tableUtils.addDownloadButtons(tableVL, table);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		return tableVL;

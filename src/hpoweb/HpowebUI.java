@@ -17,6 +17,7 @@ import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
 import hpoweb.uicontent.tabs.gene.GeneTabFactory;
 import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
 import hpoweb.util.CONSTANTS;
+import hpoweb.util.TableUtils;
 
 import java.util.Map;
 
@@ -47,10 +48,10 @@ import de.charite.phenowl.annotations.DiseaseId;
 public class HpowebUI extends UI {
 
 	private static final boolean doParseHpo = true;
-
-	private static HpData hpData = null;
-	private GoogleAnalyticsTracker tracker;
 	private static Object block = new Object();
+
+	private HpData hpData = null;
+	private GoogleAnalyticsTracker tracker;
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = HpowebUI.class)
@@ -113,11 +114,13 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			} else {
+			}
+			else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		}
+		else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
@@ -129,11 +132,13 @@ public class HpowebUI extends UI {
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			} else {
+			}
+			else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		}
+		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
 			DiseaseId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
@@ -145,10 +150,12 @@ public class HpowebUI extends UI {
 			if (doParseHpo) {
 
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			} else {
+			}
+			else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		} else {
+		}
+		else {
 			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
 					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true).show(Page
 					.getCurrent());
@@ -173,19 +180,23 @@ public class HpowebUI extends UI {
 		sheet.addStyleName(ValoTheme.TABSHEET_CENTERED_TABS);
 		sheet.setSizeFull();
 
+		TableUtils tableUtils = new TableUtils();
+
 		if (dataProvider instanceof IHpClassDataProvider) {
 
-			HpoClassTabFactory hpoClassTabFactory = new HpoClassTabFactory(hpData);
+			HpoClassTabFactory hpoClassTabFactory = new HpoClassTabFactory(hpData, tableUtils);
 			hpoClassTabFactory.addTermInfoTabs(sheet, (IHpClassDataProvider) dataProvider);
 
-		} else if (dataProvider instanceof IDiseaseDataProvider) {
+		}
+		else if (dataProvider instanceof IDiseaseDataProvider) {
 
-			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(hpData);
+			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoTabs(sheet, (IDiseaseDataProvider) dataProvider);
 
-		} else if (dataProvider instanceof IGeneDataProvider) {
+		}
+		else if (dataProvider instanceof IGeneDataProvider) {
 
-			GeneTabFactory geneTabFactory = new GeneTabFactory(hpData);
+			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
 			geneTabFactory.addGeneInfoTabs(sheet, (IGeneDataProvider) dataProvider);
 		}
 
