@@ -210,6 +210,8 @@ public class HpowebUI extends UI {
 		copyright.addStyleName(ValoTheme.LABEL_SMALL);
 		verticalLayout.addComponent(copyright);
 
+		System.gc();
+
 	}
 
 	private OWLClass parseHpId(VaadinRequest request) {
