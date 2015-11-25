@@ -1,11 +1,6 @@
 package hpoweb.uicontent;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.LazySearchbarService;
-import hpoweb.data.entities.SearchableEntity;
-import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
-import hpoweb.util.CONSTANTS;
-
+import java.io.Serializable;
 import java.util.List;
 
 import org.vaadin.viritin.LazyList;
@@ -16,7 +11,15 @@ import org.vaadin.viritin.fields.MValueChangeListener;
 
 import com.vaadin.server.Page;
 
-public class SearchBarFactory {
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.LazySearchbarService;
+import hpoweb.data.entities.SearchableEntity;
+import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
+import hpoweb.util.CONSTANTS;
+
+public class SearchBarFactory implements Serializable {
+
+	private static final long serialVersionUID = 7526472295622776147L;
 
 	public LazyComboBox<SearchableEntity> getSearchBar(HpData hpData) {
 
@@ -41,11 +44,11 @@ public class SearchBarFactory {
 		final LazyComboBox<SearchableEntity> cb = new LazyComboBox<SearchableEntity>(SearchableEntity.class, filterablePagingProvider,
 				filterableCountProvider).setCaptionGenerator(new CaptionGenerator<SearchableEntity>() {
 
-			@Override
-			public String getCaption(SearchableEntity option) {
-				return option.toString();
-			}
-		});
+					@Override
+					public String getCaption(SearchableEntity option) {
+						return option.toString();
+					}
+				});
 
 		cb.setInputPrompt("Enter search terms ...");
 
