@@ -1,7 +1,5 @@
 package hpoweb.uicontent.graph;
 
-import hpoweb.data.HpData;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +13,7 @@ import com.vaadin.graph.LayoutEngine;
 import com.vaadin.ui.HorizontalLayout;
 
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpoweb.data.HpData;
 
 public class GraphtestUI {
 	private OWLClass hpClass;
@@ -67,8 +66,8 @@ public class GraphtestUI {
 		repo.setHomeNodeId(classId);
 
 		if (!isFake) {
-			ImmutableSet<OWLClass> superclassesTmp = hpData.getExtOwlOntology().getParents(hpClass);
-			ImmutableSet<OWLClass> subclassesTmp = hpData.getExtOwlOntology().getChildren(hpClass);
+			ImmutableSet<OWLClass> superclassesTmp = hpData.getExtOwlOntology().getParentsAsserted(hpClass);
+			ImmutableSet<OWLClass> subclassesTmp = hpData.getExtOwlOntology().getChildrenAsserted(hpClass);
 
 			/*
 			 * Filter superclasses to HP-set
@@ -94,7 +93,7 @@ public class GraphtestUI {
 				repo.addNode(supClassId, supLabel).setStyle("superclass");
 				repo.joinNodes(classId, supClassId, "edge_" + classId + "_" + supClassId, "subclass of");
 
-				ImmutableSet<OWLClass> superclasses2 = hpData.getExtOwlOntology().getParents(superclass);
+				ImmutableSet<OWLClass> superclasses2 = hpData.getExtOwlOntology().getParentsAsserted(superclass);
 
 				for (OWLClass supSupClass : superclasses2) {
 					String supsupLabel = hpData.getExtOwlOntology().getLabel(supSupClass.getIRI());
@@ -115,7 +114,7 @@ public class GraphtestUI {
 				repo.addNode(subClassId, subLabel).setStyle("subclass");
 				repo.joinNodes(subClassId, classId, "edge_" + subClassId + "_" + classId, "subclass of");
 
-				ImmutableSet<OWLClass> subclasses2 = hpData.getExtOwlOntology().getChildren(subclass);
+				ImmutableSet<OWLClass> subclasses2 = hpData.getExtOwlOntology().getChildrenAsserted(subclass);
 
 				for (OWLClass subSubClass : subclasses2) {
 					String subsubLabel = hpData.getExtOwlOntology().getLabel(subSubClass.getIRI());

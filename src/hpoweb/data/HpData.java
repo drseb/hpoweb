@@ -15,7 +15,6 @@ import de.charite.phenowl.hpowl.util.OwlAxiomClass;
 public class HpData {
 
 	private ExtendedOwlOntology extOwlOntology;
-	private ExtendedOwlOntology extOwlOntologyWoEq;
 
 	private AnnotationUtils annotationUtils;
 
@@ -27,17 +26,16 @@ public class HpData {
 
 		Set<OwlAxiomClass> remove = new HashSet<>();
 		remove.add(OwlAxiomClass.EQUIVALENCE);
-		extOwlOntologyWoEq = new ExtendedOwlOntology(inputOntologyFile, xmlFile, remove);
-		extOwlOntology = new ExtendedOwlOntology(inputOntologyFile, xmlFile);
+		extOwlOntology = new ExtendedOwlOntology(inputOntologyFile, xmlFile, remove);
 
 		// debug
 		OWLClass cls = extOwlOntology.getOWLClassForIRI(IRI.create("http://purl.obolibrary.org/obo/HP_0100533"));
 		System.out.println("ancestors of " + cls);
-		for (OWLClass c : extOwlOntology.getAncestors(cls)) {
+		for (OWLClass c : extOwlOntology.getAncestorsAsserted(cls)) {
 			System.out.println(" - " + extOwlOntology.getLabel(c.getIRI()));
 		}
 
-		annotationUtils = new AnnotationUtils(extOwlOntologyWoEq);
+		annotationUtils = new AnnotationUtils(extOwlOntology);
 		annotationUtils.setDataPath(basepath + "/WEB-INF/data/biodata/");
 		annotationUtils.parseAssociation();
 

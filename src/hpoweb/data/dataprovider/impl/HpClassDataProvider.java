@@ -1,12 +1,5 @@
 package hpoweb.data.dataprovider.impl;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.data.entities.DiseaseGene;
-import hpoweb.uicontent.graph.GraphtestUI;
-import hpoweb.uicontent.table.DiseaseGeneTableEntry;
-import hpoweb.uicontent.table.GeneDiseaseTableEntry;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,6 +15,12 @@ import de.charite.phenowl.annotations.DiseaseEntry;
 import de.charite.phenowl.annotations.DiseaseId;
 import de.charite.phenowl.hpowl.util.ExtendedOwlOntology;
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.data.entities.DiseaseGene;
+import hpoweb.uicontent.graph.GraphtestUI;
+import hpoweb.uicontent.table.DiseaseGeneTableEntry;
+import hpoweb.uicontent.table.GeneDiseaseTableEntry;
 
 public class HpClassDataProvider implements IHpClassDataProvider {
 
@@ -50,7 +49,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 		this.primaryId = OboUtil.IRI2ID(hpClass.getIRI());
 		this.iriString = hpClass.getIRI().toString();
 
-		ImmutableSet<OWLClass> superClassesTmp = hpData.getExtOwlOntology().getParents(hpClass);
+		ImmutableSet<OWLClass> superClassesTmp = hpData.getExtOwlOntology().getParentsAsserted(hpClass);
 		/*
 		 * Filter superclasses to HP-set
 		 */
@@ -62,7 +61,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 		/*
 		 * Filter subclasses to HP-set
 		 */
-		ImmutableSet<OWLClass> subClassesTmp = hpData.getExtOwlOntology().getChildren(hpClass);
+		ImmutableSet<OWLClass> subClassesTmp = hpData.getExtOwlOntology().getChildrenAsserted(hpClass);
 		subClasses = new HashSet<OWLClass>();
 		for (OWLClass cls : subClassesTmp)
 			if (cls.getIRI().toString().contains("HP_"))
