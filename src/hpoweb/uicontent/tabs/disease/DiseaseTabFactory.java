@@ -54,8 +54,7 @@ public class DiseaseTabFactory {
 			Label l = new Label("No genes associated with this disease.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		}
-		else {
+		} else {
 			for (DiseaseGene gene : genes) {
 				Label l = new Label(gene.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId + "="
 						+ gene.getGeneId() + "'>" + gene.getGeneId() + "</a>)", ContentMode.HTML);
@@ -93,7 +92,10 @@ public class DiseaseTabFactory {
 
 		tableVL.addComponent(table);
 
-		tableUtils.addDownloadButtons(tableVL, table);
+		String diseaseId = dataProvider.getId();
+		String header = "Export for " + diseaseId;
+		String fileName = "hpoterms_for_" + diseaseId;
+		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		return tableVL;
@@ -107,8 +109,7 @@ public class DiseaseTabFactory {
 			Label l = new Label("No synonyms or alternative names");
 			l.addStyleName("tab-content-content");
 			vl_syns.addComponent(l);
-		}
-		else {
+		} else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");

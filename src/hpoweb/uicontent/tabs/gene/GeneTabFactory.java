@@ -48,8 +48,7 @@ public class GeneTabFactory {
 			Label l = new Label("No diseases associated with this gene.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		}
-		else {
+		} else {
 			for (DiseaseEntry disease : diseases) {
 				Label l = new Label(disease.getName() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
 						+ disease.getDiseaseIdAsString() + "'>" + disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
@@ -87,7 +86,11 @@ public class GeneTabFactory {
 
 		tableVL.addComponent(table);
 
-		tableUtils.addDownloadButtons(tableVL, table);
+		String geneId = dataProvider.getId();
+		String header = "Export for " + geneId;
+		String fileName = "hpoterms_for_" + geneId;
+		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
+
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		return tableVL;

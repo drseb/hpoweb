@@ -10,7 +10,6 @@ import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -19,35 +18,31 @@ import de.charite.phenowl.annotations.DiseaseEntry;
 
 public class TableUtils {
 
-	public void addDownloadButtons(VerticalLayout tableVL, final Table table) {
+	public void addDownloadButtons(VerticalLayout tableVL, final Table table, String filename, String header) {
 		final ThemeResource exportExcel = new ThemeResource("img/table-excel-20px.png");
 		final Button excelExportButton = new Button("Export to Excel");
 		excelExportButton.setIcon(exportExcel);
 
-		excelExportButton.addClickListener(new Button.ClickListener() {
-
-			public void buttonClick(final ClickEvent event) {
-				ExcelExport excelExport = new ExcelExport(table);
-				excelExport.excludeCollapsedColumns();
-				excelExport.setReportTitle("Excel export");
-				excelExport.export();
-				excelExport = null;
-			}
+		excelExportButton.addClickListener(event -> {
+			ExcelExport excelExport = new ExcelExport(table);
+			excelExport.excludeCollapsedColumns();
+			excelExport.setReportTitle(header);
+			excelExport.setExportFileName(filename + ".xls");
+			excelExport.export();
+			excelExport = null;
 		});
 
 		final ThemeResource exportCsv = new ThemeResource("img/table-csv-20px.png");
 		final Button csvExportButton = new Button("Export to CSV");
 		csvExportButton.setIcon(exportCsv);
 
-		csvExportButton.addClickListener(new Button.ClickListener() {
-
-			public void buttonClick(final ClickEvent event) {
-				CsvExport csvExport = new CsvExport(table);
-				csvExport.excludeCollapsedColumns();
-				csvExport.setReportTitle("CSV Export");
-				csvExport.export();
-				csvExport = null;
-			}
+		csvExportButton.addClickListener(event -> {
+			CsvExport csvExport = new CsvExport(table);
+			csvExport.excludeCollapsedColumns();
+			csvExport.setReportTitle(header);
+			csvExport.setExportFileName(filename + ".csv");
+			csvExport.export();
+			csvExport = null;
 		});
 
 		HorizontalLayout hlButtons = new HorizontalLayout();

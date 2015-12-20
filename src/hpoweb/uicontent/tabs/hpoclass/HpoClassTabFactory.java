@@ -108,7 +108,12 @@ public class HpoClassTabFactory {
 		}
 
 		tableVL.addComponent(table);
-		tableUtils.addDownloadButtons(tableVL, table);
+
+		String hpoId = dataProvider.getId();
+		String header = "Export for " + hpoId;
+		String fileName = "genes_for_" + hpoId;
+
+		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 
 		tableVL.setExpandRatio(table, 1f);
 		tableVL.addStyleName("tab-content-vl");
@@ -142,7 +147,11 @@ public class HpoClassTabFactory {
 
 		tableVL.addComponent(table);
 
-		tableUtils.addDownloadButtons(tableVL, table);
+		String hpoId = dataProvider.getId();
+		String header = "Export for " + hpoId;
+		String fileName = "diseases_for_" + hpoId;
+
+		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		return tableVL;
@@ -159,8 +168,7 @@ public class HpoClassTabFactory {
 					ContentMode.HTML);
 			suggestSyn.addStyleName("tab-content-content");
 			vl_syns.addComponent(suggestSyn);
-		}
-		else {
+		} else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");
@@ -293,7 +301,9 @@ public class HpoClassTabFactory {
 		// lab1.addStyleName(ValoTheme.LABEL_LIGHT);
 		// lab1.addStyleName("tab-content-header");
 		//
-		// Label labelSuperclasses = new Label(Joiner.on(", ").join(superClassesHtmlString), ContentMode.HTML);
+		// Label labelSuperclasses = new
+		// Label(Joiner.on(", ").join(superClassesHtmlString),
+		// ContentMode.HTML);
 		// labelSuperclasses.addStyleName("tab-content-content");
 		// vlSubSuperClasses.addComponent(lab1);
 		// vlSubSuperClasses.addComponent(labelSuperclasses);
@@ -306,12 +316,15 @@ public class HpoClassTabFactory {
 		// lab2.addStyleName("tab-content-header");
 		// Label labelSubClasses;
 		// if (subClassesHtmlString.size() < 1) {
-		// labelSubClasses = new Label("Currently, there is no subclass for this class. If you want to suggest a subclass, please use our "
-		// + "<a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>.",
+		// labelSubClasses = new
+		// Label("Currently, there is no subclass for this class. If you want to suggest a subclass, please use our "
+		// +
+		// "<a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>.",
 		// ContentMode.HTML);
 		// }
 		// else {
-		// labelSubClasses = new Label(Joiner.on(", ").join(subClassesHtmlString), ContentMode.HTML);
+		// labelSubClasses = new
+		// Label(Joiner.on(", ").join(subClassesHtmlString), ContentMode.HTML);
 		// }
 		// labelSubClasses.addStyleName("tab-content-content");
 		// vlSubSuperClasses.addComponent(lab2);
@@ -348,8 +361,7 @@ public class HpoClassTabFactory {
 						+ RandomStringUtils.randomAlphabetic(10).toUpperCase() + "</a>";
 				htmlList.add(str);
 			}
-		}
-		else {
+		} else {
 			// it's ugly to use hpData here, but the dataprovider doesn't know
 			// the labels for the parents/children
 			for (OWLClass c : classes) {
