@@ -38,9 +38,9 @@ public class JungDAGLayoutEngine extends JungLayoutEngine {
 		AbstractLayout<NodeProxy, ArcProxy> layout1 = createLayout(model.getGraph(), new Dimension(width, height));
 		layoutWithLayout(width, height, lockedNodes, layout1, 5000);
 
-		int numberOfNodes = model.getNodes().size();
-		AbstractLayout<NodeProxy, ArcProxy> layout2 = createLayout2(model.getGraph(), new Dimension(width, height));
-		layoutWithLayout(width, height, lockedNodes, layout2, numberOfNodes);
+		// int numberOfNodes = model.getNodes().size();
+		// AbstractLayout<NodeProxy, ArcProxy> layout2 = createLayout2(model.getGraph(), new Dimension(width, height));
+		// layoutWithLayout(width, height, lockedNodes, layout2, numberOfNodes);
 	}
 
 	private void layoutWithLayout(final int width, final int height, Collection<NodeProxy> lockedNodes, AbstractLayout<NodeProxy, ArcProxy> layout,

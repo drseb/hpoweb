@@ -62,7 +62,7 @@ public class GraphtestUI {
 			classId = "HP:" + RandomStringUtils.randomNumeric(7);
 		}
 
-		repo.addNode(classId, classLabel).setStyle("root");
+		repo.addNode(classId, classLabel.replaceAll("\\s+", "<br>")).setStyle("root");
 		repo.setHomeNodeId(classId);
 
 		if (!isFake) {
@@ -90,7 +90,7 @@ public class GraphtestUI {
 				String supLabel = hpData.getExtOwlOntology().getLabel(superclass.getIRI());
 				String supClassId = OboUtil.IRI2ID(superclass.getIRI());
 
-				repo.addNode(supClassId, supLabel).setStyle("superclass");
+				repo.addNode(supClassId, supLabel.replaceAll("\\s+", "<br>")).setStyle("superclass");
 				repo.joinNodes(classId, supClassId, "edge_" + classId + "_" + supClassId, "subclass of");
 
 				ImmutableSet<OWLClass> superclasses2 = hpData.getExtOwlOntology().getParentsAsserted(superclass);
@@ -99,7 +99,7 @@ public class GraphtestUI {
 					String supsupLabel = hpData.getExtOwlOntology().getLabel(supSupClass.getIRI());
 					String supsupClassId = OboUtil.IRI2ID(supSupClass.getIRI());
 
-					repo.addNode(supsupClassId, supsupLabel).setStyle("supersuperclass");
+					repo.addNode(supsupClassId, supsupLabel.replaceAll("\\s+", "<br>")).setStyle("supersuperclass");
 					repo.joinNodes(supClassId, supsupClassId, "edge_" + supClassId + "_" + supsupClassId, "subclass of");
 
 				}
@@ -111,7 +111,7 @@ public class GraphtestUI {
 				String subLabel = hpData.getExtOwlOntology().getLabel(subclass.getIRI());
 				String subClassId = OboUtil.IRI2ID(subclass.getIRI());
 
-				repo.addNode(subClassId, subLabel).setStyle("subclass");
+				repo.addNode(subClassId, subLabel.replaceAll("\\s+", "<br>")).setStyle("subclass");
 				repo.joinNodes(subClassId, classId, "edge_" + subClassId + "_" + classId, "subclass of");
 
 				ImmutableSet<OWLClass> subclasses2 = hpData.getExtOwlOntology().getChildrenAsserted(subclass);
@@ -120,7 +120,7 @@ public class GraphtestUI {
 					String subsubLabel = hpData.getExtOwlOntology().getLabel(subSubClass.getIRI());
 					String subsubClassId = OboUtil.IRI2ID(subSubClass.getIRI());
 
-					repo.addNode(subsubClassId, subsubLabel).setStyle("subsubclass");
+					repo.addNode(subsubClassId, subsubLabel.replaceAll("\\s+", "<br>")).setStyle("subsubclass");
 					repo.joinNodes(subsubClassId, subClassId, "edge_" + subsubClassId + "_" + subClassId, "subclass of");
 
 				}
@@ -134,12 +134,12 @@ public class GraphtestUI {
 			for (int i = 0; i < 3; i++) {
 				String neighclassLabel = RandomStringUtils.randomAlphabetic(10) + "super";
 				String neighclassId = "HP:" + RandomStringUtils.randomNumeric(7);
-				repo.addNode(neighclassId, neighclassLabel).setStyle("superclass");
+				repo.addNode(neighclassId, neighclassLabel.replaceAll("\\s+", "<br>")).setStyle("superclass");
 				repo.joinNodes(classId, neighclassId, "edge_" + neighclassId + "_" + classId, "subclass of");
 
 				String neigh2classLabel = RandomStringUtils.randomAlphabetic(10) + "supersuper";
 				String neigh2classId = "HP:" + RandomStringUtils.randomNumeric(7);
-				repo.addNode(neigh2classId, neigh2classLabel).setStyle("supersuperclass");
+				repo.addNode(neigh2classId, neigh2classLabel.replaceAll("\\s+", "<br>")).setStyle("supersuperclass");
 				repo.joinNodes(neighclassId, neigh2classId, "edge2_" + neighclassId + "_" + classId, "subclass of");
 
 			}
@@ -148,12 +148,12 @@ public class GraphtestUI {
 			for (int i = 0; i < 7; i++) {
 				String neighclassLabel = RandomStringUtils.randomAlphabetic(10);
 				String neighclassId = "HP:" + RandomStringUtils.randomNumeric(7);
-				repo.addNode(neighclassId, neighclassLabel).setStyle("subclass");
+				repo.addNode(neighclassId, neighclassLabel.replaceAll("\\s+", "<br>")).setStyle("subclass");
 				repo.joinNodes(neighclassId, classId, "edge_" + classId + "_" + neighclassId, "subclass of");
 
 				String neigh2classLabel = RandomStringUtils.randomAlphabetic(10);
 				String neigh2classId = "HP:" + RandomStringUtils.randomNumeric(7);
-				repo.addNode(neigh2classId, neigh2classLabel).setStyle("subsubclass");
+				repo.addNode(neigh2classId, neigh2classLabel.replaceAll("\\s+", "<br>")).setStyle("subsubclass");
 				repo.joinNodes(neigh2classId, neighclassId, "edge2_" + neighclassId + "_" + classId, "subclass of");
 			}
 
