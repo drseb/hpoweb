@@ -1,24 +1,5 @@
 package hpoweb;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IDiseaseDataProvider;
-import hpoweb.data.dataprovider.IEntityDataProvider;
-import hpoweb.data.dataprovider.IGeneDataProvider;
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.data.dataprovider.impl.DiseaseDataProvider;
-import hpoweb.data.dataprovider.impl.FakeDiseaseDataProvider;
-import hpoweb.data.dataprovider.impl.FakeGeneDataProvider;
-import hpoweb.data.dataprovider.impl.FakeHpClassDataProvider;
-import hpoweb.data.dataprovider.impl.GeneDataProvider;
-import hpoweb.data.dataprovider.impl.HpClassDataProvider;
-import hpoweb.data.entities.SearchableEntity;
-import hpoweb.uicontent.SearchBarFactory;
-import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
-import hpoweb.uicontent.tabs.gene.GeneTabFactory;
-import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
-import hpoweb.util.CONSTANTS;
-import hpoweb.util.TableUtils;
-
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
@@ -41,6 +22,24 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.annotations.DiseaseId;
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IDiseaseDataProvider;
+import hpoweb.data.dataprovider.IEntityDataProvider;
+import hpoweb.data.dataprovider.IGeneDataProvider;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.data.dataprovider.impl.DiseaseDataProvider;
+import hpoweb.data.dataprovider.impl.FakeDiseaseDataProvider;
+import hpoweb.data.dataprovider.impl.FakeGeneDataProvider;
+import hpoweb.data.dataprovider.impl.FakeHpClassDataProvider;
+import hpoweb.data.dataprovider.impl.GeneDataProvider;
+import hpoweb.data.dataprovider.impl.HpClassDataProvider;
+import hpoweb.data.entities.SearchableEntity;
+import hpoweb.uicontent.SearchBarFactory;
+import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
+import hpoweb.uicontent.tabs.gene.GeneTabFactory;
+import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
+import hpoweb.util.CONSTANTS;
+import hpoweb.util.TableUtils;
 
 @SuppressWarnings("serial")
 @Theme("hpoweb")
@@ -78,6 +77,7 @@ public class HpowebUI extends UI {
 		if (rootLocation.contains("?")) {
 			rootLocation = rootLocation.replaceAll("\\?.+", "");
 		}
+
 		CONSTANTS.rootLocation = rootLocation;
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
@@ -85,6 +85,7 @@ public class HpowebUI extends UI {
 		final VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setSpacing(true);
 		verticalLayout.setMargin(true);
+
 		setContent(verticalLayout);
 
 		/*
@@ -124,8 +125,9 @@ public class HpowebUI extends UI {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
-				new Notification("Invalid gene id input", "<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId)
-						+ "'", Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
+				new Notification("Invalid gene id input",
+						"<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE,
+						true).show(Page.getCurrent());
 				return;
 			}
 
@@ -142,8 +144,9 @@ public class HpowebUI extends UI {
 
 			DiseaseId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
-				new Notification("Invalid disease id input", "<br/><br/>Can't parse disease id from '"
-						+ request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
+				new Notification("Invalid disease id input",
+						"<br/><br/>Can't parse disease id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
+						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return;
 			}
 
@@ -157,8 +160,8 @@ public class HpowebUI extends UI {
 		}
 		else {
 			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
-					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true).show(Page
-					.getCurrent());
+					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true)
+							.show(Page.getCurrent());
 			return;
 		}
 
@@ -209,8 +212,6 @@ public class HpowebUI extends UI {
 		copyright.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 		copyright.addStyleName(ValoTheme.LABEL_SMALL);
 		verticalLayout.addComponent(copyright);
-
-		System.gc();
 
 	}
 
