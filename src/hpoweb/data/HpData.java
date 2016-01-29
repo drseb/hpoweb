@@ -23,7 +23,7 @@ public class HpData {
 		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 
 		final String xmlFile = basepath + "/WEB-INF/data/hp/catalog-v001.xml";
-		String inputOntologyFile = basepath + "/WEB-INF/data/hp/hp-edit.owl";
+		String inputOntologyFile = basepath + "/WEB-INF/data/hp/hp.owl";
 
 		Set<OwlAxiomClass> remove = new HashSet<>();
 		remove.add(OwlAxiomClass.EQUIVALENCE);

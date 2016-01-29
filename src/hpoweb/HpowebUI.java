@@ -216,7 +216,12 @@ public class HpowebUI extends UI {
 		verticalLayout.setSizeFull();
 
 		verticalLayout.addComponent(getCopyPasteButtons(dataProvider.getId(), dataProvider.getLabel()));
+		Label version = new Label("Ontology version: " + hpData.getExtOwlOntology().getOntologyVersionIri());
+		version.addStyleName(ValoTheme.LABEL_LIGHT);
+		version.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+		version.addStyleName(ValoTheme.LABEL_SMALL);
 
+		verticalLayout.addComponent(version);
 		Label copyright = new Label("Copyright 2015 -  The Human Phenotype Ontology Project");
 		copyright.addStyleName(ValoTheme.LABEL_LIGHT);
 		copyright.addStyleName(ValoTheme.LABEL_NO_MARGIN);
@@ -243,7 +248,6 @@ public class HpowebUI extends UI {
 
 			@Override
 			public void focus(FocusEvent event) {
-				System.out.println("got focus");
 				clipboard.setText(id + "\t" + label);
 				clipboard.apply(b);
 			}
@@ -252,7 +256,6 @@ public class HpowebUI extends UI {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				System.out.println("got click");
 				clipboard.setText(id + "\t" + label);
 				clipboard.apply(b);
 			}
