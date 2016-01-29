@@ -53,7 +53,7 @@ import hpoweb.util.TableUtils;
 @Widgetset("hpoweb.widgetset.HpowebWidgetset")
 public class HpowebUI extends UI {
 
-	private static final boolean doParseHpo = false;
+	private static final boolean doParseHpo = true;
 	private final static Object block = new Object();
 
 	private static HpData hpData = null;
