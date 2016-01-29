@@ -42,6 +42,7 @@
 		<dependency org="org.vaadin.addons" name="graph-explorer" rev="0.7.0" /> 
 		<dependency org="org.vaadin.addon" name="tableexport-for-vaadin" rev="1.5.1.5" />
 		<dependency org="org.vaadin.addons" name="googleanalyticstracker" rev="2.1.0" />
+		<dependency org="com.github.vaadin4qbanos" name="jsclipboard" rev="1.0.2" />
 		
 	</dependencies>
 </ivy-module>

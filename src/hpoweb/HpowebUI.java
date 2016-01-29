@@ -11,9 +11,16 @@ import org.vaadin.viritin.fields.LazyComboBox;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.jsclipboard.JSClipboard;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
@@ -46,7 +53,7 @@ import hpoweb.util.TableUtils;
 @Widgetset("hpoweb.widgetset.HpowebWidgetset")
 public class HpowebUI extends UI {
 
-	private static final boolean doParseHpo = true;
+	private static final boolean doParseHpo = false;
 	private final static Object block = new Object();
 
 	private static HpData hpData = null;
@@ -176,6 +183,7 @@ public class HpowebUI extends UI {
 
 		vl.addComponent(info1);
 		vl.addComponent(info2);
+
 		verticalLayout.addComponent(vl);
 
 		TabSheet sheet = new TabSheet();
@@ -207,12 +215,68 @@ public class HpowebUI extends UI {
 		verticalLayout.setExpandRatio(sheet, 1f);
 		verticalLayout.setSizeFull();
 
+		verticalLayout.addComponent(getCopyPasteButtons(dataProvider.getId(), dataProvider.getLabel()));
+
 		Label copyright = new Label("Copyright 2015 -  The Human Phenotype Ontology Project");
 		copyright.addStyleName(ValoTheme.LABEL_LIGHT);
 		copyright.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 		copyright.addStyleName(ValoTheme.LABEL_SMALL);
 		verticalLayout.addComponent(copyright);
 
+	}
+
+	/**
+	 * Not sure this is really elegant ;-)
+	 * 
+	 * @param string
+	 * 
+	 * @param id
+	 * @param label
+	 * @return
+	 */
+	private Component getCopyPasteButtons(final String id, final String label) {
+		final VerticalLayout layout = new VerticalLayout();
+		final JSClipboard clipboard = new JSClipboard();
+
+		Button b = new Button("Copy Id/Label");
+		b.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focus(FocusEvent event) {
+				System.out.println("got focus");
+				clipboard.setText(id + "\t" + label);
+				clipboard.apply(b);
+			}
+		});
+		b.addClickListener(new ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				System.out.println("got click");
+				clipboard.setText(id + "\t" + label);
+				clipboard.apply(b);
+			}
+		});
+
+		clipboard.apply(b);
+
+		clipboard.addSuccessListener(new JSClipboard.SuccessListener() {
+
+			@Override
+			public void onSuccess() {
+				Notification.show("Copy to clipboard successful");
+			}
+		});
+		clipboard.addErrorListener(new JSClipboard.ErrorListener() {
+
+			@Override
+			public void onError() {
+				Notification.show("Copy to clipboard unsuccessful", Notification.Type.ERROR_MESSAGE);
+			}
+		});
+
+		layout.addComponent(b);
+		return layout;
 	}
 
 	private OWLClass parseHpId(VaadinRequest request) {
