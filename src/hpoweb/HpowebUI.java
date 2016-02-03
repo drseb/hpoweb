@@ -1,34 +1,5 @@
 package hpoweb;
 
-import java.util.Map;
-
-import javax.servlet.annotation.WebServlet;
-
-import org.semanticweb.owlapi.model.OWLClass;
-import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
-import org.vaadin.viritin.fields.LazyComboBox;
-
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.jsclipboard.JSClipboard;
-import com.vaadin.server.Page;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
-
-import de.charite.phenowl.annotations.DiseaseId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.dataprovider.IEntityDataProvider;
@@ -48,12 +19,45 @@ import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
 
+import java.util.Map;
+
+import javax.servlet.annotation.WebServlet;
+
+import org.semanticweb.owlapi.model.OWLClass;
+import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
+import org.vaadin.viritin.fields.LazyComboBox;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.Viewport;
+import com.vaadin.annotations.Widgetset;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.jsclipboard.JSClipboard;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+
+import de.charite.phenowl.annotations.DiseaseId;
+
 @SuppressWarnings("serial")
 @Theme("hpoweb")
 @Widgetset("hpoweb.widgetset.HpowebWidgetset")
+@Viewport("width=device-width, initial-scale=1")
 public class HpowebUI extends UI {
 
-	private static final boolean doParseHpo = true;
+	private static final boolean doParseHpo = false;
 	private final static Object block = new Object();
 
 	private static HpData hpData = null;
@@ -61,7 +65,7 @@ public class HpowebUI extends UI {
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = HpowebUI.class)
-	public static class Servlet extends MyVaadinServlet {
+	public static class Servlet extends VaadinServlet {
 	}
 
 	@Override
@@ -122,53 +126,45 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
-				new Notification("Invalid gene id input",
-						"<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE,
-						true).show(Page.getCurrent());
+				new Notification("Invalid gene id input", "<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId)
+						+ "'", Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return;
 			}
 
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
 			DiseaseId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
-				new Notification("Invalid disease id input",
-						"<br/><br/>Can't parse disease id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
-						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
+				new Notification("Invalid disease id input", "<br/><br/>Can't parse disease id from '"
+						+ request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return;
 			}
 
 			if (doParseHpo) {
 
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		}
-		else {
+		} else {
 			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
-					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true)
-							.show(Page.getCurrent());
+					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true).show(Page
+					.getCurrent());
 			return;
 		}
 
@@ -198,14 +194,12 @@ public class HpowebUI extends UI {
 			HpoClassTabFactory hpoClassTabFactory = new HpoClassTabFactory(hpData, tableUtils);
 			hpoClassTabFactory.addTermInfoTabs(sheet, (IHpClassDataProvider) dataProvider);
 
-		}
-		else if (dataProvider instanceof IDiseaseDataProvider) {
+		} else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoTabs(sheet, (IDiseaseDataProvider) dataProvider);
 
-		}
-		else if (dataProvider instanceof IGeneDataProvider) {
+		} else if (dataProvider instanceof IGeneDataProvider) {
 
 			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
 			geneTabFactory.addGeneInfoTabs(sheet, (IGeneDataProvider) dataProvider);
@@ -216,7 +210,13 @@ public class HpowebUI extends UI {
 		verticalLayout.setSizeFull();
 
 		verticalLayout.addComponent(getCopyPasteButtons(dataProvider.getId(), dataProvider.getLabel()));
-		Label version = new Label("Ontology version: " + hpData.getExtOwlOntology().getOntologyVersionIri());
+		String ontologyVersion;
+		if (doParseHpo) {
+			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
+		} else {
+			ontologyVersion = "some ontology version here";
+		}
+		Label version = new Label("Ontology version: " + ontologyVersion);
 		version.addStyleName(ValoTheme.LABEL_LIGHT);
 		version.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 		version.addStyleName(ValoTheme.LABEL_SMALL);
