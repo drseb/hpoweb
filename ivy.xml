@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE ivy-module [
-	<!ENTITY vaadin.version "7.5.0">
+	<!ENTITY vaadin.version "7.6.1">
 ]>
 <ivy-module version="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -27,16 +27,13 @@
 		<dependency org="com.vaadin" name="vaadin-push" rev="&vaadin.version;" />
 
 		<!-- Precompiled DefaultWidgetSet -->
-		<dependency org="com.vaadin" name="vaadin-client-compiled"
-			rev="&vaadin.version;" />
+		<dependency org="com.vaadin" name="vaadin-client-compiled" rev="&vaadin.version;" />
 
 		<!-- Vaadin client side, needed for widget set compilation -->
-		<dependency org="com.vaadin" name="vaadin-client" rev="&vaadin.version;"
-			 conf="widgetset-compile->default" />
+		<dependency org="com.vaadin" name="vaadin-client" rev="&vaadin.version;" conf="widgetset-compile->default" />
 
 		<!-- Compiler for custom widget sets. Should not be deployed -->
-		<dependency org="com.vaadin" name="vaadin-client-compiler"
-			rev="&vaadin.version;" conf="widgetset-compile->default" />
+		<dependency org="com.vaadin" name="vaadin-client-compiler" rev="&vaadin.version;" conf="widgetset-compile->default" />
 			
 		<dependency org="org.vaadin" name="viritin" rev="1.34" /> 
 		<dependency org="org.vaadin.addons" name="graph-explorer" rev="0.7.0" /> 

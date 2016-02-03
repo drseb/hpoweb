@@ -1,9 +1,7 @@
 package hpoweb;
 
 import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.dataprovider.IEntityDataProvider;
-import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.data.dataprovider.IHpClassDataProvider;
 import hpoweb.data.dataprovider.impl.DiseaseDataProvider;
 import hpoweb.data.dataprovider.impl.FakeDiseaseDataProvider;
@@ -13,8 +11,6 @@ import hpoweb.data.dataprovider.impl.GeneDataProvider;
 import hpoweb.data.dataprovider.impl.HpClassDataProvider;
 import hpoweb.data.entities.SearchableEntity;
 import hpoweb.uicontent.SearchBarFactory;
-import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
-import hpoweb.uicontent.tabs.gene.GeneTabFactory;
 import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
@@ -27,6 +23,10 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
 import org.vaadin.viritin.fields.LazyComboBox;
 
+import com.sebworks.vaadstrap.Col;
+import com.sebworks.vaadstrap.ColMod;
+import com.sebworks.vaadstrap.Container;
+import com.sebworks.vaadstrap.Row;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Viewport;
@@ -37,14 +37,12 @@ import com.vaadin.jsclipboard.JSClipboard;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -93,27 +91,27 @@ public class HpowebUI extends UI {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
 
-		final VerticalLayout verticalLayout = new VerticalLayout();
-		verticalLayout.setSpacing(true);
-		verticalLayout.setMargin(true);
-
-		setContent(verticalLayout);
-
-		/*
-		 * Add search functionality on top
-		 */
 		SearchBarFactory searchbarFactory = new SearchBarFactory();
 		LazyComboBox<SearchableEntity> searchBar = searchbarFactory.getSearchBar(hpData);
-		verticalLayout.addComponent(searchBar);
-		verticalLayout.setComponentAlignment(searchBar, Alignment.TOP_CENTER);
 		searchBar.setWidth("100%");
-		IEntityDataProvider dataProvider = null;
 
-		tracker = new GoogleAnalyticsTracker("UA-62837903-2");
-		addExtension(tracker);
-		tracker.extend(UI.getCurrent());
-		tracker.extend(this);
-		tracker.trackPageview(Page.getCurrent().getLocation().toString());
+		setSizeFull();
+
+		// VerticalLayout rootVl = new VerticalLayout();
+		// setContent(rootVl);
+		// rootVl.addComponent(searchBar);
+		// rootVl.addComponent(gridContainer);
+
+		Container gridContainer = new Container();
+		setContent(gridContainer);
+
+		Row r = gridContainer.addRow();
+		Col c = r.addCol();
+		c.addComponent(searchBar);
+
+		setTracker();
+
+		IEntityDataProvider dataProvider = null;
 
 		if (parameterMap.containsKey(CONSTANTS.hpRequestId)) {
 
@@ -156,7 +154,6 @@ public class HpowebUI extends UI {
 			}
 
 			if (doParseHpo) {
-
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
 			} else {
 				dataProvider = new FakeDiseaseDataProvider();
@@ -168,8 +165,6 @@ public class HpowebUI extends UI {
 			return;
 		}
 
-		VerticalLayout vl = new VerticalLayout();
-		// hl.setSpacing(false);
 		Label info1 = new Label("Infopage for " + dataProvider.getTypeOfEntityString());
 		Label info2 = new Label(dataProvider.getLabel());
 		info1.addStyleName(ValoTheme.LABEL_LIGHT);
@@ -177,39 +172,50 @@ public class HpowebUI extends UI {
 		info1.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 		info2.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 
-		vl.addComponent(info1);
-		vl.addComponent(info2);
-
-		verticalLayout.addComponent(vl);
-
-		TabSheet sheet = new TabSheet();
-		sheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
-		sheet.addStyleName(ValoTheme.TABSHEET_CENTERED_TABS);
-		sheet.setSizeFull();
+		Row row1 = gridContainer.addRow();
+		row1.setWidth("100%");
+		Col col12 = row1.addCol(ColMod.MD_4);
+		Col col22 = row1.addCol(ColMod.MD_4);
+		col12.addComponent(info1);
+		col22.addComponent(info2);
+		System.out.println("added labels: " + info1 + " and " + info2);
 
 		TableUtils tableUtils = new TableUtils();
 
 		if (dataProvider instanceof IHpClassDataProvider) {
 
 			HpoClassTabFactory hpoClassTabFactory = new HpoClassTabFactory(hpData, tableUtils);
-			hpoClassTabFactory.addTermInfoTabs(sheet, (IHpClassDataProvider) dataProvider);
+			hpoClassTabFactory.addTermInfoElements(gridContainer, (IHpClassDataProvider) dataProvider);
 
-		} else if (dataProvider instanceof IDiseaseDataProvider) {
-
-			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
-			diseaseTabFactory.addDiseaseInfoTabs(sheet, (IDiseaseDataProvider) dataProvider);
-
-		} else if (dataProvider instanceof IGeneDataProvider) {
-
-			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
-			geneTabFactory.addGeneInfoTabs(sheet, (IGeneDataProvider) dataProvider);
 		}
 
-		verticalLayout.addComponent(sheet);
-		verticalLayout.setExpandRatio(sheet, 1f);
-		verticalLayout.setSizeFull();
+		// if (dataProvider instanceof IHpClassDataProvider) {
+		//
+		// HpoClassTabFactory hpoClassTabFactory = new
+		// HpoClassTabFactory(hpData, tableUtils);
+		// hpoClassTabFactory.addTermInfoTabs(sheet, (IHpClassDataProvider)
+		// dataProvider);
+		//
+		// } else if (dataProvider instanceof IDiseaseDataProvider) {
+		//
+		// DiseaseTabFactory diseaseTabFactory = new
+		// DiseaseTabFactory(tableUtils);
+		// diseaseTabFactory.addDiseaseInfoTabs(sheet, (IDiseaseDataProvider)
+		// dataProvider);
+		//
+		// } else if (dataProvider instanceof IGeneDataProvider) {
+		//
+		// GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
+		// geneTabFactory.addGeneInfoTabs(sheet, (IGeneDataProvider)
+		// dataProvider);
+		// }
 
-		verticalLayout.addComponent(getCopyPasteButtons(dataProvider.getId(), dataProvider.getLabel()));
+		// verticalLayout.addComponent(sheet);
+		// verticalLayout.setExpandRatio(sheet, 1f);
+		// verticalLayout.setSizeFull();
+
+		// verticalLayout.addComponent(getCopyPasteButtons(dataProvider.getId(),
+		// dataProvider.getLabel()));
 		String ontologyVersion;
 		if (doParseHpo) {
 			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
@@ -221,13 +227,21 @@ public class HpowebUI extends UI {
 		version.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 		version.addStyleName(ValoTheme.LABEL_SMALL);
 
-		verticalLayout.addComponent(version);
+		// verticalLayout.addComponent(version);
 		Label copyright = new Label("Copyright 2015 -  The Human Phenotype Ontology Project");
 		copyright.addStyleName(ValoTheme.LABEL_LIGHT);
 		copyright.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 		copyright.addStyleName(ValoTheme.LABEL_SMALL);
-		verticalLayout.addComponent(copyright);
+		// verticalLayout.addComponent(copyright);
 
+	}
+
+	private void setTracker() {
+		tracker = new GoogleAnalyticsTracker("UA-62837903-2");
+		addExtension(tracker);
+		tracker.extend(UI.getCurrent());
+		tracker.extend(this);
+		tracker.trackPageview(Page.getCurrent().getLocation().toString());
 	}
 
 	/**

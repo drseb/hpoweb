@@ -17,6 +17,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import com.google.common.base.Joiner;
+import com.sebworks.vaadstrap.Col;
+import com.sebworks.vaadstrap.ColMod;
+import com.sebworks.vaadstrap.Container;
+import com.sebworks.vaadstrap.Row;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -129,6 +133,7 @@ public class HpoClassTabFactory {
 		table.addContainerProperty("Disease name", TableLabel.class, null);
 		table.addContainerProperty("Associated genes", TableLabel.class, null);
 		table.setSizeFull();
+		table.setHeight("300px");
 
 		List<DiseaseGeneTableEntry> tableContent = dataProvider.getDiseaseGeneTableContent();
 
@@ -154,6 +159,8 @@ public class HpoClassTabFactory {
 		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
+		tableVL.setHeight("350px");
+		tableVL.setWidth("350px");
 		return tableVL;
 	}
 
@@ -371,6 +378,81 @@ public class HpoClassTabFactory {
 		}
 
 		return htmlList;
+	}
+
+	public void addTermInfoElements(Container gridContainer, IHpClassDataProvider dataProvider) {
+
+		Row row1 = gridContainer.addRow();
+		row1.setWidth("100%");
+		ColMod[] styles = new ColMod[] { ColMod.SM_3 };
+		/*
+		 * IDs
+		 */
+		{
+			Col col1 = row1.addCol(styles);
+			VerticalLayout vl_ids = getIdentifierTab(dataProvider);
+			col1.addComponent(new Label(
+					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+		}
+
+		/*
+		 * Synonyms
+		 */
+		{
+			Col col1 = row1.addCol(styles);
+			VerticalLayout l2 = getSynonymTab(dataProvider);
+			col1.addComponent(new Label(
+					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+		}
+		/*
+		 * Textdef
+		 */
+		{
+			Col col1 = row1.addCol(styles);
+			VerticalLayout l3 = getDefinitionsTab(dataProvider);
+			col1.addComponent(new Label(
+					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+
+		}
+
+		/*
+		 * Subclasses + Superclasses
+		 */
+		{
+			Col col1 = row1.addCol(styles);
+			VerticalLayout l4 = getSubSuperClassesTab(dataProvider);
+			col1.addComponent(new Label(
+					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+
+		}
+
+		// /*
+		// * Graph stuff
+		// */
+		// {
+		// Col col1 = row2.addCol(styles2);
+		// VerticalLayout l5 = getGraphTab(dataProvider);
+		// col1.addComponent(l5);
+		// }
+		//
+		// /*
+		// * Associated diseases
+		// */
+		// {
+		// Col col1 = row2.addCol(styles2);
+		// VerticalLayout l6 = getAssociatedDiseasesTab(dataProvider);
+		// col1.addComponent(l6);
+		// }
+		//
+		// /*
+		// * Associated genes
+		// */
+		// {
+		// Col col1 = row2.addCol(styles2);
+		// VerticalLayout l7 = getAssociatedGenesTab(dataProvider);
+		// col1.addComponent(l7);
+		// }
+
 	}
 
 }
