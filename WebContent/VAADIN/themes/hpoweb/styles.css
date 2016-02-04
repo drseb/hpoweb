@@ -999,7 +999,7 @@
  */
 
 .v-vaadin-version:after {
-	content: "7.6.1";
+	content: "7.6.2";
 }
 
 .v-widget {
@@ -4751,11 +4751,11 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .v-ie8 .hpoweb .v-grid-editor-cells  > div .v-datefield-button {
-	margin-left: -30px;
+	margin-left: -37px;
 }
 
 .v-ie8 .hpoweb .v-grid-editor-cells  > div .v-filterselect-button {
-	margin-left: -27px;
+	margin-left: -25px;
 }
 
 .hpoweb .v-grid-editor-cells  > div .v-select, .hpoweb .v-grid-editor-cells  > div .v-select-select {
@@ -13010,4 +13010,19 @@ div.v-layout.v-horizontal.v-widget {
 	display: inline-block;
 	width: 19px;
 	overflow: hidden;
+}
+
+.hpoweb .tab-content-vl {
+	background-color: white;
+	border: solid 1px lightgray;
+	padding: 5px;
+	border-radius: 3px;
+}
+
+.hpoweb .tab-content-header {
+	padding-left: 1px;
+}
+
+.hpoweb .v-csslayout-gridelement {
+	padding-top: 10px;
 }

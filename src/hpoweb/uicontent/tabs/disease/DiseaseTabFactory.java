@@ -1,20 +1,24 @@
 package hpoweb.uicontent.tabs.disease;
 
+import java.util.Collection;
+import java.util.List;
+
+import com.sebworks.vaadstrap.Col;
+import com.sebworks.vaadstrap.ColMod;
+import com.sebworks.vaadstrap.Container;
+import com.sebworks.vaadstrap.Row;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
+
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.entities.DiseaseGene;
 import hpoweb.uicontent.table.HpoClassTableEntry;
 import hpoweb.uicontent.table.TableLabel;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
-
-import java.util.Collection;
-import java.util.List;
-
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
 
 public class DiseaseTabFactory {
 
@@ -54,7 +58,8 @@ public class DiseaseTabFactory {
 			Label l = new Label("No genes associated with this disease.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		} else {
+		}
+		else {
 			for (DiseaseGene gene : genes) {
 				Label l = new Label(gene.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId + "="
 						+ gene.getGeneId() + "'>" + gene.getGeneId() + "</a>)", ContentMode.HTML);
@@ -80,8 +85,9 @@ public class DiseaseTabFactory {
 
 		int id = 0;
 		for (HpoClassTableEntry entry : tableContent) {
-			TableLabel hpoid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.hpRequestId + "=" + entry.getHpoId() + "'>"
-					+ entry.getHpoId() + "</a>", ContentMode.HTML);
+			TableLabel hpoid = new TableLabel(
+					"<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.hpRequestId + "=" + entry.getHpoId() + "'>" + entry.getHpoId() + "</a>",
+					ContentMode.HTML);
 			TableLabel hpolabel = new TableLabel(entry.getHpoLabel(), ContentMode.HTML);
 			hpoid.setDescription(entry.getDescription());
 			hpolabel.setDescription(entry.getDescription());
@@ -109,7 +115,8 @@ public class DiseaseTabFactory {
 			Label l = new Label("No synonyms or alternative names");
 			l.addStyleName("tab-content-content");
 			vl_syns.addComponent(l);
-		} else {
+		}
+		else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");
@@ -119,6 +126,46 @@ public class DiseaseTabFactory {
 
 		vl_syns.addStyleName("tab-content-vl");
 		return vl_syns;
+	}
+
+	public void addDiseaseInfoElements(Container gridContainer, IDiseaseDataProvider dataProvider) {
+
+		Row row1 = gridContainer.addRow();
+		row1.setWidth("100%");
+		/*
+		 * Alt names / synonyms
+		 */
+		{
+			VerticalLayout vl_altNames = getAltNamesTab(dataProvider);
+			Col col1 = row1.addCol(ColMod.MD_4);
+			col1.addComponent(vl_altNames);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
+		}
+
+		/*
+		 * Associated terms
+		 */
+		{
+			VerticalLayout vl_terms = getAnnotatedHpoClassesTab(dataProvider);
+			Col col1 = row1.addCol(ColMod.MD_4);
+			col1.addComponent(vl_terms);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
+		}
+
+		/*
+		 * Associated genes
+		 */
+
+		{
+			VerticalLayout vl_genes = getAssociatedGenesTab(dataProvider);
+			Col col1 = row1.addCol(ColMod.MD_4);
+			col1.addComponent(vl_genes);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
+		}
+
 	}
 
 }

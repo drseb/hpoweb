@@ -1,14 +1,5 @@
 package hpoweb.uicontent.tabs.hpoclass;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.uicontent.graph.GraphtestUI;
-import hpoweb.uicontent.table.DiseaseGeneTableEntry;
-import hpoweb.uicontent.table.GeneDiseaseTableEntry;
-import hpoweb.uicontent.table.TableLabel;
-import hpoweb.util.CONSTANTS;
-import hpoweb.util.TableUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +20,14 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.uicontent.graph.GraphtestUI;
+import hpoweb.uicontent.table.DiseaseGeneTableEntry;
+import hpoweb.uicontent.table.GeneDiseaseTableEntry;
+import hpoweb.uicontent.table.TableLabel;
+import hpoweb.util.CONSTANTS;
+import hpoweb.util.TableUtils;
 
 public class HpoClassTabFactory {
 
@@ -45,26 +44,26 @@ public class HpoClassTabFactory {
 		/*
 		 * IDs
 		 */
-		VerticalLayout vl_ids = getIdentifierTab(dataProvider);
+		VerticalLayout vl_ids = getIdentifiersVl(dataProvider);
 		sheet.addTab(vl_ids, "Identifier");
 
 		/*
 		 * Synonyms
 		 */
 
-		VerticalLayout l2 = getSynonymTab(dataProvider);
+		VerticalLayout l2 = getSynonymsVl(dataProvider);
 		sheet.addTab(l2, "Synonyms");
 
 		/*
 		 * Textdef
 		 */
-		VerticalLayout l3 = getDefinitionsTab(dataProvider);
+		VerticalLayout l3 = getDefinitionsVl(dataProvider);
 		sheet.addTab(l3, "Definition");
 
 		/*
 		 * Subclasses + Superclasses
 		 */
-		VerticalLayout l4 = getSubSuperClassesTab(dataProvider);
+		VerticalLayout l4 = getSubSuperClassesVl(dataProvider);
 		sheet.addTab(l4, "Sub- and superclasses");
 
 		/*
@@ -96,13 +95,14 @@ public class HpoClassTabFactory {
 		table.addContainerProperty("Gene", TableLabel.class, null);
 		table.addContainerProperty("Associated diseases", TableLabel.class, null);
 		table.setSizeFull();
+		table.setHeight("300px");
 
 		List<GeneDiseaseTableEntry> tableContent = dataProvider.getGeneDiseaseTableContent();
 
 		int id = 0;
 		for (GeneDiseaseTableEntry entry : tableContent) {
-			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId
-					+ "=" + entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
+			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId + "="
+					+ entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
 
 			String diseasesString = tableUtils.getDiseasesAsHtmlString(entry.getAssociatedDiseases(), CONSTANTS.rootLocation);
 
@@ -119,8 +119,9 @@ public class HpoClassTabFactory {
 
 		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 
-		tableVL.setExpandRatio(table, 1f);
+		// tableVL.setExpandRatio(table, 1f);
 		tableVL.addStyleName("tab-content-vl");
+		tableVL.setHeight("350px");
 		return tableVL;
 	}
 
@@ -139,8 +140,8 @@ public class HpoClassTabFactory {
 
 		int id = 0;
 		for (DiseaseGeneTableEntry entry : tableContent) {
-			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
-					+ entry.getDiseaseId() + "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
+			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "=" + entry.getDiseaseId()
+					+ "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
 			TableLabel diseasename = new TableLabel(entry.getDiseaseName(), ContentMode.HTML);
 
 			String genesString = tableUtils.getGenesAsHtmlString(entry.getAssociatedGenes(), CONSTANTS.rootLocation);
@@ -160,22 +161,24 @@ public class HpoClassTabFactory {
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		tableVL.setHeight("350px");
-		tableVL.setWidth("350px");
+		// tableVL.setWidth("350px");
 		return tableVL;
 	}
 
-	private VerticalLayout getSynonymTab(IHpClassDataProvider dataProvider) {
+	private VerticalLayout getSynonymsVl(IHpClassDataProvider dataProvider) {
 
 		VerticalLayout vl_syns = new VerticalLayout();
 
 		Collection<String> synonyms = dataProvider.getSynonyms();
 		if (synonyms.size() < 1) {
-			Label suggestSyn = new Label("Currently we do not have synonyms for this class. If you are missing a synonym, feel free to suggest a "
-					+ "synonym at our <a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>",
+			Label suggestSyn = new Label(
+					"Currently we do not have synonyms for this class. If you are missing a synonym, feel free to suggest a "
+							+ "synonym at our <a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>",
 					ContentMode.HTML);
 			suggestSyn.addStyleName("tab-content-content");
 			vl_syns.addComponent(suggestSyn);
-		} else {
+		}
+		else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");
@@ -187,7 +190,7 @@ public class HpoClassTabFactory {
 		return vl_syns;
 	}
 
-	private VerticalLayout getIdentifierTab(IHpClassDataProvider dataProvider) {
+	private VerticalLayout getIdentifiersVl(IHpClassDataProvider dataProvider) {
 
 		VerticalLayout vl_ids = new VerticalLayout();
 		/*
@@ -206,8 +209,8 @@ public class HpoClassTabFactory {
 		 * Secondary ID
 		 */
 		Label lab2 = new Label("Alternative IDs");
-		lab2.setDescription("These are other identifiers which are referring to the same HPO class. "
-				+ "These are introduced when classes are merged.");
+		lab2.setDescription(
+				"These are other identifiers which are referring to the same HPO class. " + "These are introduced when classes are merged.");
 		lab2.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab2.addStyleName("tab-content-header");
 
@@ -223,11 +226,14 @@ public class HpoClassTabFactory {
 		 * PURLs
 		 */
 		Label lab3 = new Label("PURL");
-		lab3.setDescription("This is a persistent URL. Please see <a href='https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator' target='_new'>"
-				+ "this wikipedia article</a> for more information on PURLs.");
+		lab3.setDescription(
+				"This is a persistent URL. Please see <a href='https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator' target='_new'>"
+						+ "this wikipedia article</a> for more information on PURLs.");
 		lab3.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab3.addStyleName("tab-content-header");
 		Label iriLabel = new Label("<a href='" + dataProvider.getIRI() + "' target='_new'>" + dataProvider.getIRI() + "</a>", ContentMode.HTML);
+		// Label iriLabel = new Label(dataProvider.getIRI().toString());
+
 		iriLabel.addStyleName("tab-content-content");
 		vl_ids.addComponent(lab3);
 		vl_ids.addComponent(iriLabel);
@@ -237,7 +243,7 @@ public class HpoClassTabFactory {
 		return vl_ids;
 	}
 
-	private VerticalLayout getDefinitionsTab(IHpClassDataProvider dataProvider) {
+	private VerticalLayout getDefinitionsVl(IHpClassDataProvider dataProvider) {
 
 		VerticalLayout vl_ids = new VerticalLayout();
 
@@ -263,7 +269,8 @@ public class HpoClassTabFactory {
 		 * Logical def
 		 */
 		Label lab2 = new Label("Logical definition");
-		lab2.setDescription("This is a computer readable logical definition of the HPO class. If you want to learn more about this please see <a href='http://nar.oxfordjournals.org/content/42/D1/D966.full' target='_new'>http://nar.oxfordjournals.org/content/42/D1/D966.full</a>.");
+		lab2.setDescription(
+				"This is a computer readable logical definition of the HPO class. If you want to learn more about this please see <a href='http://nar.oxfordjournals.org/content/42/D1/D966.full' target='_new'>http://nar.oxfordjournals.org/content/42/D1/D966.full</a>.");
 		lab2.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab2.addStyleName("tab-content-header");
 
@@ -289,7 +296,7 @@ public class HpoClassTabFactory {
 		return l5;
 	}
 
-	private VerticalLayout getSubSuperClassesTab(IHpClassDataProvider dataProvider) {
+	private VerticalLayout getSubSuperClassesVl(IHpClassDataProvider dataProvider) {
 		VerticalLayout vlSubSuperClasses = new VerticalLayout();
 
 		Collection<OWLClass> superClasses = dataProvider.getSuperClasses();
@@ -301,43 +308,24 @@ public class HpoClassTabFactory {
 		addLabelsSupSub(superClassesHtmlString, "Superclasses", vlSubSuperClasses);
 		addLabelsSupSub(subClassesHtmlString, "Subclasses", vlSubSuperClasses);
 
-		// /*
-		// * Superclasses
-		// */
-		// Label lab1 = new Label("Superclasses");
-		// lab1.addStyleName(ValoTheme.LABEL_LIGHT);
-		// lab1.addStyleName("tab-content-header");
-		//
-		// Label labelSuperclasses = new
-		// Label(Joiner.on(", ").join(superClassesHtmlString),
-		// ContentMode.HTML);
-		// labelSuperclasses.addStyleName("tab-content-content");
-		// vlSubSuperClasses.addComponent(lab1);
-		// vlSubSuperClasses.addComponent(labelSuperclasses);
-		//
-		// /*
-		// * Subclasses
-		// */
-		// Label lab2 = new Label("Subclasses");
-		// lab2.addStyleName(ValoTheme.LABEL_LIGHT);
-		// lab2.addStyleName("tab-content-header");
-		// Label labelSubClasses;
-		// if (subClassesHtmlString.size() < 1) {
-		// labelSubClasses = new
-		// Label("Currently, there is no subclass for this class. If you want to suggest a subclass, please use our "
-		// +
-		// "<a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>.",
-		// ContentMode.HTML);
-		// }
-		// else {
-		// labelSubClasses = new
-		// Label(Joiner.on(", ").join(subClassesHtmlString), ContentMode.HTML);
-		// }
-		// labelSubClasses.addStyleName("tab-content-content");
-		// vlSubSuperClasses.addComponent(lab2);
-		// vlSubSuperClasses.addComponent(labelSubClasses);
+		vlSubSuperClasses.addStyleName("tab-content-vl");
+		return vlSubSuperClasses;
+	}
 
-		// layout of content
+	private VerticalLayout getSuperClassesVl(IHpClassDataProvider dataProvider) {
+		VerticalLayout vlSubSuperClasses = new VerticalLayout();
+		Collection<OWLClass> superClasses = dataProvider.getSuperClasses();
+		Collection<String> superClassesHtmlString = convertToHtml(superClasses, CONSTANTS.rootLocation);
+		addLabelsSupSub(superClassesHtmlString, "Superclasses", vlSubSuperClasses);
+		vlSubSuperClasses.addStyleName("tab-content-vl");
+		return vlSubSuperClasses;
+	}
+
+	private VerticalLayout getSubClassesVl(IHpClassDataProvider dataProvider) {
+		VerticalLayout vlSubSuperClasses = new VerticalLayout();
+		Collection<OWLClass> subClasses = dataProvider.getSubClasses();
+		Collection<String> subClassesHtmlString = convertToHtml(subClasses, CONSTANTS.rootLocation);
+		addLabelsSupSub(subClassesHtmlString, "Subclasses", vlSubSuperClasses);
 		vlSubSuperClasses.addStyleName("tab-content-vl");
 		return vlSubSuperClasses;
 	}
@@ -368,7 +356,8 @@ public class HpoClassTabFactory {
 						+ RandomStringUtils.randomAlphabetic(10).toUpperCase() + "</a>";
 				htmlList.add(str);
 			}
-		} else {
+		}
+		else {
 			// it's ugly to use hpData here, but the dataprovider doesn't know
 			// the labels for the parents/children
 			for (OWLClass c : classes) {
@@ -384,46 +373,82 @@ public class HpoClassTabFactory {
 
 		Row row1 = gridContainer.addRow();
 		row1.setWidth("100%");
-		ColMod[] styles = new ColMod[] { ColMod.SM_3 };
 		/*
 		 * IDs
 		 */
 		{
-			Col col1 = row1.addCol(styles);
-			VerticalLayout vl_ids = getIdentifierTab(dataProvider);
-			col1.addComponent(new Label(
-					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+			Col col1 = row1.addCol(ColMod.MD_6);
+			VerticalLayout vl_ids = getIdentifiersVl(dataProvider);
+			col1.addComponent(vl_ids);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
 		}
 
 		/*
 		 * Synonyms
 		 */
 		{
-			Col col1 = row1.addCol(styles);
-			VerticalLayout l2 = getSynonymTab(dataProvider);
-			col1.addComponent(new Label(
-					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+			Col col1 = row1.addCol(ColMod.MD_3);
+			VerticalLayout l2 = getSynonymsVl(dataProvider);
+			col1.addComponent(l2);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
 		}
 		/*
 		 * Textdef
 		 */
 		{
-			Col col1 = row1.addCol(styles);
-			VerticalLayout l3 = getDefinitionsTab(dataProvider);
-			col1.addComponent(new Label(
-					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+			Col col1 = row1.addCol(ColMod.MD_3);
+			VerticalLayout l3 = getDefinitionsVl(dataProvider);
+			col1.addComponent(l3);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
+		}
 
+		Row row2 = gridContainer.addRow();
+		row2.setWidth("100%");
+		/*
+		 * Superclasses
+		 */
+		{
+			Col col1 = row2.addCol(ColMod.MD_6);
+			VerticalLayout l4 = getSuperClassesVl(dataProvider);
+			col1.addComponent(l4);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
 		}
 
 		/*
-		 * Subclasses + Superclasses
+		 * Subclasses
 		 */
 		{
-			Col col1 = row1.addCol(styles);
-			VerticalLayout l4 = getSubSuperClassesTab(dataProvider);
-			col1.addComponent(new Label(
-					"da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm da didel dumm dumm "));
+			Col col1 = row2.addCol(ColMod.MD_6);
+			VerticalLayout l4 = getSubClassesVl(dataProvider);
+			col1.addComponent(l4);
+			col1.setHeight("100%");
+			col1.addStyleName("v-csslayout-gridelement");
+		}
 
+		Row row3 = gridContainer.addRow();
+		row3.setWidth("100%");
+		/*
+		 * Associated diseases
+		 */
+		{
+			Col col1 = row3.addCol(ColMod.MD_6);
+			VerticalLayout l6 = getAssociatedDiseasesTab(dataProvider);
+			col1.addComponent(l6);
+			col1.addStyleName("v-csslayout-gridelement");
+		}
+
+		/*
+		 * Associated genes
+		 */
+		{
+			Col col1 = row3.addCol(ColMod.MD_6);
+			VerticalLayout l7 = getAssociatedGenesTab(dataProvider);
+			col1.addComponent(l7);
+			col1.addStyleName("v-csslayout-gridelement");
 		}
 
 		// /*
@@ -435,23 +460,6 @@ public class HpoClassTabFactory {
 		// col1.addComponent(l5);
 		// }
 		//
-		// /*
-		// * Associated diseases
-		// */
-		// {
-		// Col col1 = row2.addCol(styles2);
-		// VerticalLayout l6 = getAssociatedDiseasesTab(dataProvider);
-		// col1.addComponent(l6);
-		// }
-		//
-		// /*
-		// * Associated genes
-		// */
-		// {
-		// Col col1 = row2.addCol(styles2);
-		// VerticalLayout l7 = getAssociatedGenesTab(dataProvider);
-		// col1.addComponent(l7);
-		// }
 
 	}
 

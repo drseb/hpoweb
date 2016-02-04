@@ -33,4 +33,25 @@
   @include valo;
 
   // Insert your own theme rules here
+
+	.tab-content-vl{
+		background-color: white;
+   		border: solid 1px lightgray;
+		padding: 5px;
+		border-radius: 3px;
+	}
+	
+	.tab-content-header{
+		padding-left: 1px;
+	}
+	
+	.tab-content-content{
+		//padding-left: 5px;
+		//padding-bottom: 5px;
+	}
+	
+	.v-csslayout-gridelement{
+		padding-top: 10px;
+	}
+	
 }
