@@ -13037,3 +13037,32 @@ div.v-layout.v-horizontal.v-widget {
 .hpoweb .v-csslayout-gridelement {
 	padding-top: 10px;
 }
+
+.hpoweb .v-graph-explorer .node {
+	padding: 1px;
+	font-size: 90%;
+}
+
+.hpoweb .v-graph-explorer .node .label {
+	color: black;
+}
+
+.hpoweb .v-graph-explorer .node.root {
+	background-color: #E7E4D3;
+}
+
+.hpoweb .v-graph-explorer .node.subclass {
+	background-color: #EBF4FA;
+}
+
+.hpoweb .v-graph-explorer .node.subsubclass {
+	background-color: #BBD9EE;
+}
+
+.hpoweb .v-graph-explorer .node.superclass {
+	background-color: #EBF4FA;
+}
+
+.hpoweb .v-graph-explorer .node.supersuperclass {
+	background-color: #BBD9EE;
+}

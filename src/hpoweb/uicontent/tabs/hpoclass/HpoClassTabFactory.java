@@ -465,16 +465,6 @@ public class HpoClassTabFactory {
 			col1.addStyleName("v-csslayout-gridelement");
 		}
 
-		// /*
-		// * Graph stuff
-		// */
-		// {
-		// Col col1 = row2.addCol(styles2);
-		// VerticalLayout l5 = getGraphTab(dataProvider);
-		// col1.addComponent(l5);
-		// }
-		//
-
 	}
 
 }

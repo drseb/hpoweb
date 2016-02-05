@@ -54,4 +54,39 @@ $v-app-loading-text: "Loading HPO data... please wait";
 		padding-top: 10px;
 	}
 	
+		  /////////////////
+	 // graph stuff //
+	/////////////////
+	
+	
+	
+	.v-graph-explorer .node{
+		padding: 1px;
+		font-size: 90%;
+	}
+	
+	.v-graph-explorer .node .label{
+		color: black;
+	}
+	
+	.v-graph-explorer .node.root {
+	background-color: #E7E4D3  ;
+  }
+  
+  .v-graph-explorer .node.subclass {
+	background-color: #EBF4FA ;
+  }
+
+.v-graph-explorer .node.subsubclass {
+	background-color: #BBD9EE  ;
+  }
+  
+   .v-graph-explorer .node.superclass {
+	background-color: #EBF4FA ;
+  }
+
+.v-graph-explorer .node.supersuperclass {
+	background-color: #BBD9EE  ;
+  }
+	
 }

@@ -221,7 +221,7 @@ public class HpowebUI extends UI {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				GraphtestUI ui = dataProvider.getGraphtestUi();
-				Window subWindow = new Window("Sub-window");
+				Window subWindow = new Window("Graph view");
 				VerticalLayout subContent = new VerticalLayout();
 				subContent.setMargin(true);
 				subWindow.setContent(subContent);
