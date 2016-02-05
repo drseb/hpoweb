@@ -12,6 +12,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.entities.DiseaseGene;
@@ -53,6 +54,11 @@ public class DiseaseTabFactory {
 	private VerticalLayout getAssociatedGenesTab(IDiseaseDataProvider dataProvider) {
 		VerticalLayout vl_genes = new VerticalLayout();
 
+		Label lab1 = new Label("Associated genes");
+		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
+		lab1.addStyleName("tab-content-header");
+		vl_genes.addComponent(lab1);
+
 		Collection<DiseaseGene> genes = dataProvider.getAssociatedGenes();
 		if (genes.size() < 1) {
 			Label l = new Label("No genes associated with this disease.");
@@ -76,10 +82,16 @@ public class DiseaseTabFactory {
 		VerticalLayout tableVL = new VerticalLayout();
 		tableVL.setSizeFull();
 
+		Label lab1 = new Label("Associated HPO classes");
+		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
+		lab1.addStyleName("tab-content-header");
+		tableVL.addComponent(lab1);
+
 		Table table = new Table();
 		table.addContainerProperty("HPO id", TableLabel.class, null);
 		table.addContainerProperty("HPO label", TableLabel.class, null);
 		table.setSizeFull();
+		table.setHeight("275px");
 
 		List<HpoClassTableEntry> tableContent = dataProvider.getAnnotatedHpoClasses();
 
@@ -104,11 +116,17 @@ public class DiseaseTabFactory {
 		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
+		tableVL.setHeight("350px");
 		return tableVL;
 	}
 
 	private VerticalLayout getAltNamesTab(IDiseaseDataProvider dataProvider) {
 		VerticalLayout vl_syns = new VerticalLayout();
+
+		Label lab1 = new Label("Alternative names");
+		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
+		lab1.addStyleName("tab-content-header");
+		vl_syns.addComponent(lab1);
 
 		Collection<String> synonyms = dataProvider.getAlternativeNames();
 		if (synonyms.size() < 1) {

@@ -1664,6 +1664,17 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 4px;
 }
 
+.hpoweb .v-app-loading:after {
+	position: fixed;
+	z-index: 100;
+	top: 45%;
+	padding-top: 47px;
+	text-align: center;
+	left: 0;
+	right: 0;
+	content: "Loading HPO data... please wait";
+}
+
 .hpoweb .v-loading-indicator {
 	position: fixed !important;
 	z-index: 99999;

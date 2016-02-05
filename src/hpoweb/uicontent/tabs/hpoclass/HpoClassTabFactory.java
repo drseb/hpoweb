@@ -91,11 +91,16 @@ public class HpoClassTabFactory {
 		VerticalLayout tableVL = new VerticalLayout();
 		tableVL.setSizeFull();
 
+		Label lab1 = new Label("Associated genes");
+		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
+		lab1.addStyleName("tab-content-header");
+		tableVL.addComponent(lab1);
+
 		Table table = new Table();
 		table.addContainerProperty("Gene", TableLabel.class, null);
 		table.addContainerProperty("Associated diseases", TableLabel.class, null);
 		table.setSizeFull();
-		table.setHeight("300px");
+		table.setHeight("275px");
 
 		List<GeneDiseaseTableEntry> tableContent = dataProvider.getGeneDiseaseTableContent();
 
@@ -119,7 +124,7 @@ public class HpoClassTabFactory {
 
 		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
 
-		// tableVL.setExpandRatio(table, 1f);
+		tableVL.setExpandRatio(table, 1f);
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setHeight("350px");
 		return tableVL;
@@ -129,12 +134,17 @@ public class HpoClassTabFactory {
 		VerticalLayout tableVL = new VerticalLayout();
 		tableVL.setSizeFull();
 
+		Label lab1 = new Label("Associated diseases");
+		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
+		lab1.addStyleName("tab-content-header");
+		tableVL.addComponent(lab1);
+
 		Table table = new Table();
 		table.addContainerProperty("Disease id", TableLabel.class, null);
 		table.addContainerProperty("Disease name", TableLabel.class, null);
 		table.addContainerProperty("Associated genes", TableLabel.class, null);
 		table.setSizeFull();
-		table.setHeight("300px");
+		table.setHeight("275px");
 
 		List<DiseaseGeneTableEntry> tableContent = dataProvider.getDiseaseGeneTableContent();
 
@@ -161,13 +171,17 @@ public class HpoClassTabFactory {
 		tableVL.addStyleName("tab-content-vl");
 		tableVL.setExpandRatio(table, 1f);
 		tableVL.setHeight("350px");
-		// tableVL.setWidth("350px");
 		return tableVL;
 	}
 
 	private VerticalLayout getSynonymsVl(IHpClassDataProvider dataProvider) {
 
 		VerticalLayout vl_syns = new VerticalLayout();
+
+		Label lab1 = new Label("Synonyms");
+		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
+		lab1.addStyleName("tab-content-header");
+		vl_syns.addComponent(lab1);
 
 		Collection<String> synonyms = dataProvider.getSynonyms();
 		if (synonyms.size() < 1) {
@@ -377,7 +391,7 @@ public class HpoClassTabFactory {
 		 * IDs
 		 */
 		{
-			Col col1 = row1.addCol(ColMod.MD_6);
+			Col col1 = row1.addCol(ColMod.MD_5);
 			VerticalLayout vl_ids = getIdentifiersVl(dataProvider);
 			col1.addComponent(vl_ids);
 			col1.setHeight("100%");
@@ -398,7 +412,7 @@ public class HpoClassTabFactory {
 		 * Textdef
 		 */
 		{
-			Col col1 = row1.addCol(ColMod.MD_3);
+			Col col1 = row1.addCol(ColMod.MD_4);
 			VerticalLayout l3 = getDefinitionsVl(dataProvider);
 			col1.addComponent(l3);
 			col1.setHeight("100%");

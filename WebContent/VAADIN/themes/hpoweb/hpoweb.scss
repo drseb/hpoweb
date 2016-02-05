@@ -24,6 +24,10 @@
 //$v-friendly-color: #2c9720;
 //$v-error-indicator-color: #ed473b;
 
+
+$v-app-loading-text: "Loading HPO data... please wait";
+
+
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
@@ -45,10 +49,6 @@
 		padding-left: 1px;
 	}
 	
-	.tab-content-content{
-		//padding-left: 5px;
-		//padding-bottom: 5px;
-	}
 	
 	.v-csslayout-gridelement{
 		padding-top: 10px;

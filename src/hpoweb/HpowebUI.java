@@ -27,17 +27,18 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.annotations.DiseaseId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.dataprovider.IEntityDataProvider;
+import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.data.dataprovider.IHpClassDataProvider;
 import hpoweb.data.dataprovider.impl.DiseaseDataProvider;
 import hpoweb.data.dataprovider.impl.FakeDiseaseDataProvider;
@@ -47,7 +48,9 @@ import hpoweb.data.dataprovider.impl.GeneDataProvider;
 import hpoweb.data.dataprovider.impl.HpClassDataProvider;
 import hpoweb.data.entities.SearchableEntity;
 import hpoweb.uicontent.SearchBarFactory;
+import hpoweb.uicontent.graph.GraphtestUI;
 import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
+import hpoweb.uicontent.tabs.gene.GeneTabFactory;
 import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
@@ -99,6 +102,7 @@ public class HpowebUI extends UI {
 		Container gridContainer = new Container();
 		setContent(gridContainer);
 
+		// just a line that disappears on small devices
 		addLineRow(gridContainer);
 
 		/*
@@ -111,6 +115,9 @@ public class HpowebUI extends UI {
 		 */
 		addTracker();
 
+		// just a line that disappears on small devices
+		addLineRow(gridContainer);
+
 		/*
 		 * Data provider initialization
 		 */
@@ -118,10 +125,9 @@ public class HpowebUI extends UI {
 		if (dataProvider == null)
 			return;
 
-		addLineRow(gridContainer);
-
 		addInfoLabels(gridContainer, dataProvider);
 
+		// just a line that disappears on small devices
 		addLineRow(gridContainer);
 
 		TableUtils tableUtils = new TableUtils();
@@ -131,30 +137,25 @@ public class HpowebUI extends UI {
 			HpoClassTabFactory hpoClassTabFactory = new HpoClassTabFactory(hpData, tableUtils);
 			hpoClassTabFactory.addTermInfoElements(gridContainer, (IHpClassDataProvider) dataProvider);
 
+			addExtraButtons(gridContainer, (IHpClassDataProvider) dataProvider);
 		}
 		else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoElements(gridContainer, (IDiseaseDataProvider) dataProvider);
 		}
+		else if (dataProvider instanceof IGeneDataProvider) {
 
-		// else if (dataProvider instanceof IGeneDataProvider) {
-		//
-		// GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
-		// geneTabFactory.addGeneInfoTabs(sheet, (IGeneDataProvider)
-		// dataProvider);
-		// }
+			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
+			geneTabFactory.addGeneInfoElements(gridContainer, (IGeneDataProvider) dataProvider);
 
-		// verticalLayout.addComponent(sheet);
-		// verticalLayout.setExpandRatio(sheet, 1f);
-		// verticalLayout.setSizeFull();
+		}
 
-		// verticalLayout.addComponent(getCopyPasteButtons(dataProvider.getId(),
-		// dataProvider.getLabel()));
+		// just a line that disappears on small devices
+		addLineRow(gridContainer);
+
 		String ontologyVersion;
-		if (doParseHpo)
-
-		{
+		if (doParseHpo) {
 			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
 		}
 		else
@@ -163,18 +164,81 @@ public class HpowebUI extends UI {
 			ontologyVersion = "some ontology version here";
 		}
 
+		/*
+		 * Bottom part
+		 */
 		Label version = new Label("Ontology version: " + ontologyVersion);
-		version.addStyleName(ValoTheme.LABEL_LIGHT);
-		version.addStyleName(ValoTheme.LABEL_NO_MARGIN);
-		version.addStyleName(ValoTheme.LABEL_SMALL);
-
-		// verticalLayout.addComponent(version);
 		Label copyright = new Label("Copyright 2015 -  The Human Phenotype Ontology Project");
-		copyright.addStyleName(ValoTheme.LABEL_LIGHT);
-		copyright.addStyleName(ValoTheme.LABEL_NO_MARGIN);
-		copyright.addStyleName(ValoTheme.LABEL_SMALL);
-		// verticalLayout.addComponent(copyright);
+		Label feedback = new Label("Question, Comments, Feedback: sebastian.koehler@charite.de");
+		addLabelRow(gridContainer, version);
+		addLabelRow(gridContainer, copyright);
+		addLabelRow(gridContainer, feedback);
 
+	}
+
+	private void addLabelRow(Container gridContainer, Label label) {
+		Row r = gridContainer.addRow();
+		Col c = r.addCol();
+		c.addComponent(label);
+		label.addStyleName(ValoTheme.LABEL_LIGHT);
+		label.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+		label.addStyleName(ValoTheme.LABEL_SMALL);
+	}
+
+	private void addExtraButtons(Container gridContainer, IHpClassDataProvider dataProvider) {
+
+		Row r = gridContainer.addRow();
+		r.setWidth("100%");
+
+		/*
+		 * Copypaste
+		 */
+		Button cpButton = getCopyPasteButton(dataProvider.getId(), dataProvider.getLabel());
+		VerticalLayout vlCp = new VerticalLayout();
+		vlCp.addComponent(cpButton);
+
+		Col c1 = r.addCol(ColMod.SM_6);
+		c1.addComponent(vlCp);
+		c1.addStyleName("v-csslayout-gridelement");
+
+		/*
+		 * Graph
+		 */
+		Button graphButton = getGraphViewButton(dataProvider);
+		VerticalLayout vlGraph = new VerticalLayout();
+		vlGraph.addComponent(graphButton);
+		Col c2 = r.addCol(ColMod.SM_6);
+		c2.addComponent(vlGraph);
+		c2.addStyleName("v-csslayout-gridelement");
+
+	}
+
+	private Button getGraphViewButton(IHpClassDataProvider dataProvider) {
+
+		Button b = new Button("Graph view");
+		b.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				GraphtestUI ui = dataProvider.getGraphtestUi();
+				Window subWindow = new Window("Sub-window");
+				VerticalLayout subContent = new VerticalLayout();
+				subContent.setMargin(true);
+				subWindow.setContent(subContent);
+
+				// Put some components in it
+				subContent.addComponent(ui.getGraphComponent());
+				subContent.setSizeFull();
+				// Center it in the browser window
+				subWindow.center();
+				subWindow.setWidth("90%");
+				subWindow.setHeight("90%");
+
+				UI.getCurrent().addWindow(subWindow);
+			}
+		});
+
+		return b;
 	}
 
 	private IEntityDataProvider setupDataProvider(VaadinRequest request, Map<String, String[]> parameterMap) {
@@ -274,7 +338,7 @@ public class HpowebUI extends UI {
 	private void addLineRow(Container gridContainer) {
 		Row row1 = gridContainer.addRow();
 		row1.setWidth("100%");
-		Col col12 = row1.addCol(VisibilityMod.HIDDEN_SM);
+		Col col12 = row1.addCol(VisibilityMod.HIDDEN_SM, VisibilityMod.HIDDEN_XS);
 		col12.addComponent(new Label("<hr />", ContentMode.HTML));
 
 	}
@@ -290,14 +354,8 @@ public class HpowebUI extends UI {
 	/**
 	 * Not sure this is really elegant ;-)
 	 * 
-	 * @param string
-	 * 
-	 * @param id
-	 * @param label
-	 * @return
 	 */
-	private Component getCopyPasteButtons(final String id, final String label) {
-		final VerticalLayout layout = new VerticalLayout();
+	private Button getCopyPasteButton(final String id, final String label) {
 		final JSClipboard clipboard = new JSClipboard();
 
 		Button b = new Button("Copy Id/Label");
@@ -335,8 +393,7 @@ public class HpowebUI extends UI {
 			}
 		});
 
-		layout.addComponent(b);
-		return layout;
+		return b;
 	}
 
 	private OWLClass parseHpId(VaadinRequest request) {
