@@ -1,7 +1,7 @@
 // Global variable overrides. Must be declared before importing Valo.
 
 // Defines the plaintext font size, weight and family. Font size affects general component sizing.
-//$v-font-size: 16px;
+
 //$v-font-weight: 300;
 //$v-font-family: "Open Sans", sans-serif;
 
@@ -24,49 +24,96 @@
 //$v-friendly-color: #2c9720;
 //$v-error-indicator-color: #ed473b;
 
-
-$v-app-loading-text: "Loading HPO data... please wait";
-
-
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
+
+
+$v-app-loading-text: "Loading HPO data... please wait";
+$v-font-size: 14px;
+
+$v-layout-margin-right: 5px;
+$v-layout-margin-left: 5px;
+$v-layout-margin-top: 5px;
+$v-layout-margin-bottom: 5px;
+
 @import "../valo/valo.scss";
 
+// graph stuff
+@import "../graph-explorer/graph-explorer.scss";
+
 @mixin hpoweb {
-  @include valo;
-
-  // Insert your own theme rules here
-
+  	@include valo;
+  	// graph stuff
+ 	@include graph-explorer;
+ 	
+	.itembox {
+	    white-space: normal;
+	    vertical-align: center;
+	}
+	
+	.flexwrap[width-range~="0-599px"] {
+	    .itembox {width: 100%}
+	}
+	
+	.flexwrap[width-range~="600px-999px"] {
+	    .itembox {width: 50%}
+	}
+	.flexwrap[width-range~="1000px-"] {
+	    .itembox {width: 33.333%}
+	}
+	
+	.outerpanel{
+	   padding: 4px;
+	   color: white;
+	   border: none;
+	   box-shadow: none;
+	}
+	
+	.innerpanel{
+	   width: 100%;
+	}
+	
+	.no-top-bottom-margin{
+		margin-top: 1px;
+		margin-bottom: 1px;
+	}
+	
+	.innerpanel_vlayout{
+		padding-left: 5px;
+		font-size: 13px;
+	}
+	.v-label-wrap{
+		white-space:normal;
+	}
+	
+	.v-panel-caption-innerpanel{
+		font-size: 13px;
+	}
+	
+	
 	.tab-content-vl{
-		background-color: white;
-   		border: solid 1px lightgray;
-		padding: 5px;
-		border-radius: 3px;
+		//padding: 5px;
+		border: solid;
 	}
 	
 	.tab-content-header{
 		padding-left: 1px;
 	}
 	
-	
-	.v-csslayout-gridelement{
-		padding-top: 10px;
+	.tab-content-content{
+		//padding-left: 5px;
+		//padding-bottom: 5px;
 	}
 	
-		  /////////////////
+	  /////////////////
 	 // graph stuff //
 	/////////////////
-	
 	
 	
 	.v-graph-explorer .node{
 		padding: 1px;
 		font-size: 90%;
-	}
-	
-	.v-graph-explorer .node .label{
-		color: black;
 	}
 	
 	.v-graph-explorer .node.root {
@@ -88,5 +135,7 @@ $v-app-loading-text: "Loading HPO data... please wait";
 .v-graph-explorer .node.supersuperclass {
 	background-color: #BBD9EE  ;
   }
-	
+
+
+    
 }
