@@ -100,6 +100,8 @@ public class HpowebUI extends UI {
 		setSizeFull();
 
 		Container gridContainer = new Container();
+		gridContainer.setFluid(true);
+
 		setContent(gridContainer);
 
 		// just a line that disappears on small devices

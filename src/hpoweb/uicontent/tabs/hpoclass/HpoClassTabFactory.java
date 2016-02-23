@@ -449,17 +449,18 @@ public class HpoClassTabFactory {
 		 * Associated diseases
 		 */
 		{
-			Col col1 = row3.addCol(ColMod.MD_6);
+			Col col1 = row3.addCol(ColMod.MD_12);
 			VerticalLayout l6 = getAssociatedDiseasesTab(dataProvider);
 			col1.addComponent(l6);
 			col1.addStyleName("v-csslayout-gridelement");
 		}
-
+		Row row4 = gridContainer.addRow();
+		row4.setWidth("100%");
 		/*
 		 * Associated genes
 		 */
 		{
-			Col col1 = row3.addCol(ColMod.MD_6);
+			Col col1 = row4.addCol(ColMod.MD_12);
 			VerticalLayout l7 = getAssociatedGenesTab(dataProvider);
 			col1.addComponent(l7);
 			col1.addStyleName("v-csslayout-gridelement");
