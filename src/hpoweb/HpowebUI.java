@@ -20,6 +20,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.jsclipboard.JSClipboard;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -27,7 +28,9 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -170,14 +173,14 @@ public class HpowebUI extends UI {
 		 */
 		Label version = new Label("Ontology version: " + ontologyVersion);
 		Label copyright = new Label("Copyright 2015 -  The Human Phenotype Ontology Project");
-		Label feedback = new Label("Question, Comments, Feedback: sebastian.koehler@charite.de");
+		Link feedback = new Link("Question, Comments, Feedback: sebastian.koehler@charite.de", new ExternalResource("http://drseb.github.io/"));
 		addLabelRow(gridContainer, version);
 		addLabelRow(gridContainer, copyright);
 		addLabelRow(gridContainer, feedback);
 
 	}
 
-	private void addLabelRow(Container gridContainer, Label label) {
+	private void addLabelRow(Container gridContainer, Component label) {
 		Row r = gridContainer.addRow();
 		Col c = r.addCol();
 		c.addComponent(label);
