@@ -107,7 +107,7 @@ public class HpowebUI extends UI {
 		setContent(gridContainer);
 
 		// just a line that disappears on small devices
-		addLineRow(gridContainer);
+		addHorizontalLine(gridContainer);
 
 		/*
 		 * Add search bar on top
@@ -120,7 +120,7 @@ public class HpowebUI extends UI {
 		addTracker();
 
 		// just a line that disappears on small devices
-		addLineRow(gridContainer);
+		addHorizontalLine(gridContainer);
 
 		/*
 		 * Data provider initialization
@@ -132,7 +132,7 @@ public class HpowebUI extends UI {
 		addInfoLabels(gridContainer, dataProvider);
 
 		// just a line that disappears on small devices
-		addLineRow(gridContainer);
+		addHorizontalLine(gridContainer);
 
 		TableUtils tableUtils = new TableUtils();
 
@@ -156,7 +156,7 @@ public class HpowebUI extends UI {
 		}
 
 		// just a line that disappears on small devices
-		addLineRow(gridContainer);
+		addHorizontalLine(gridContainer);
 
 		String ontologyVersion;
 		if (doParseHpo) {
@@ -339,7 +339,7 @@ public class HpowebUI extends UI {
 	 * 
 	 * @param gridContainer
 	 */
-	private void addLineRow(Container gridContainer) {
+	private void addHorizontalLine(Container gridContainer) {
 		Row row1 = gridContainer.addRow();
 		row1.setWidth("100%");
 		Col col12 = row1.addCol(VisibilityMod.HIDDEN_SM, VisibilityMod.HIDDEN_XS);

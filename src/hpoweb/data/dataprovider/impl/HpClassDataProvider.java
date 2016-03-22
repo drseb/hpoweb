@@ -32,7 +32,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 	private Set<OWLClass> superClasses;
 	private Set<OWLClass> subClasses;
 	private GraphtestUI graphUi;
-	private ImmutableSet<String> synonyms;
+	private Set<String> synonyms;
 	private String textdef;
 	private String logicaldef;
 	private HashSet<DiseaseId> associatedDiseaseIds;
@@ -69,7 +69,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 
 		this.synonyms = hpData.getExtOwlOntology().getSynonymsForClass(hpClass);
 		this.textdef = hpData.getExtOwlOntology().getTextdefForClass(hpClass);
-		this.logicaldef = hpData.getExtOwlOntology().getLogicalDefForClassForVaadin(hpClass);
+		this.logicaldef = hpData.getExtOwlOntologyWithLogicalDefs().getLogicalDefForClassForVaadin(hpClass);
 
 		this.graphUi = new GraphtestUI(hpClass, hpData);
 		this.utils = hpData.getAnnotationUtils();

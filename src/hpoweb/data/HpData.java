@@ -19,6 +19,8 @@ public class HpData {
 
 	private AnnotationUtils annotationUtils;
 
+	private ExtendedOwlOntology extOwlOntologyWithLogicalDefs;
+
 	public HpData() {
 		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 
@@ -29,6 +31,7 @@ public class HpData {
 		remove.add(OwlAxiomClass.EQUIVALENCE);
 		extOwlOntology = new ExtendedOwlOntology(inputOntologyFile, xmlFile, remove);
 
+		extOwlOntologyWithLogicalDefs = new ExtendedOwlOntology(inputOntologyFile, xmlFile);
 		// debug
 		OWLClass cls = extOwlOntology.getOWLClassForIRI(IRI.create("http://purl.obolibrary.org/obo/HP_0100533"));
 		System.out.println("ancestors of " + cls);
@@ -50,5 +53,9 @@ public class HpData {
 
 	public AnnotationUtils getAnnotationUtils() {
 		return annotationUtils;
+	}
+
+	public ExtendedOwlOntology getExtOwlOntologyWithLogicalDefs() {
+		return extOwlOntologyWithLogicalDefs;
 	}
 }
