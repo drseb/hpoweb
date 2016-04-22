@@ -1,5 +1,25 @@
 package hpoweb;
 
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IDiseaseDataProvider;
+import hpoweb.data.dataprovider.IEntityDataProvider;
+import hpoweb.data.dataprovider.IGeneDataProvider;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.data.dataprovider.impl.DiseaseDataProvider;
+import hpoweb.data.dataprovider.impl.FakeDiseaseDataProvider;
+import hpoweb.data.dataprovider.impl.FakeGeneDataProvider;
+import hpoweb.data.dataprovider.impl.FakeHpClassDataProvider;
+import hpoweb.data.dataprovider.impl.GeneDataProvider;
+import hpoweb.data.dataprovider.impl.HpClassDataProvider;
+import hpoweb.data.entities.SearchableEntity;
+import hpoweb.uicontent.SearchBarFactory;
+import hpoweb.uicontent.graph.GraphtestUI;
+import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
+import hpoweb.uicontent.tabs.gene.GeneTabFactory;
+import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
+import hpoweb.util.CONSTANTS;
+import hpoweb.util.TableUtils;
+
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
@@ -38,25 +58,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.annotations.DiseaseId;
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IDiseaseDataProvider;
-import hpoweb.data.dataprovider.IEntityDataProvider;
-import hpoweb.data.dataprovider.IGeneDataProvider;
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.data.dataprovider.impl.DiseaseDataProvider;
-import hpoweb.data.dataprovider.impl.FakeDiseaseDataProvider;
-import hpoweb.data.dataprovider.impl.FakeGeneDataProvider;
-import hpoweb.data.dataprovider.impl.FakeHpClassDataProvider;
-import hpoweb.data.dataprovider.impl.GeneDataProvider;
-import hpoweb.data.dataprovider.impl.HpClassDataProvider;
-import hpoweb.data.entities.SearchableEntity;
-import hpoweb.uicontent.SearchBarFactory;
-import hpoweb.uicontent.graph.GraphtestUI;
-import hpoweb.uicontent.tabs.disease.DiseaseTabFactory;
-import hpoweb.uicontent.tabs.gene.GeneTabFactory;
-import hpoweb.uicontent.tabs.hpoclass.HpoClassTabFactory;
-import hpoweb.util.CONSTANTS;
-import hpoweb.util.TableUtils;
 
 @SuppressWarnings("serial")
 @Theme("hpoweb")
@@ -142,13 +143,11 @@ public class HpowebUI extends UI {
 			hpoClassTabFactory.addTermInfoElements(gridContainer, (IHpClassDataProvider) dataProvider);
 
 			addExtraButtons(gridContainer, (IHpClassDataProvider) dataProvider);
-		}
-		else if (dataProvider instanceof IDiseaseDataProvider) {
+		} else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoElements(gridContainer, (IDiseaseDataProvider) dataProvider);
-		}
-		else if (dataProvider instanceof IGeneDataProvider) {
+		} else if (dataProvider instanceof IGeneDataProvider) {
 
 			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
 			geneTabFactory.addGeneInfoElements(gridContainer, (IGeneDataProvider) dataProvider);
@@ -161,8 +160,7 @@ public class HpowebUI extends UI {
 		String ontologyVersion;
 		if (doParseHpo) {
 			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
-		}
-		else
+		} else
 
 		{
 			ontologyVersion = "some ontology version here";
@@ -259,52 +257,44 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
-				new Notification("Invalid gene id input",
-						"<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE,
-						true).show(Page.getCurrent());
+				new Notification("Invalid gene id input", "<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId)
+						+ "'", Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return null;
 			}
 
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
 			DiseaseId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
-				new Notification("Invalid disease id input",
-						"<br/><br/>Can't parse disease id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
-						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
+				new Notification("Invalid disease id input", "<br/><br/>Can't parse disease id from '"
+						+ request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return null;
 			}
 
 			if (doParseHpo) {
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		}
-		else {
+		} else {
 			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
-					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true)
-							.show(Page.getCurrent());
+					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true).show(Page
+					.getCurrent());
 			return null;
 		}
 		return dataProvider;

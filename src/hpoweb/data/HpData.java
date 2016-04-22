@@ -44,7 +44,7 @@ public class HpData {
 		DiseaseGeneMapper.setOrphanetPath(datapath);
 		annotationUtils.setDataPath(datapath);
 		annotationUtils.parseAssociation();
-
+		annotationUtils.getDiseaseGeneMapper().addCancerGeneAssociationsToDiseaseGenes();
 	}
 
 	public ExtendedOwlOntology getExtOwlOntology() {
