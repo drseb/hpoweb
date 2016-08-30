@@ -1,5 +1,14 @@
 package hpoweb.uicontent.tabs.hpoclass;
 
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.uicontent.graph.GraphtestUI;
+import hpoweb.uicontent.table.DiseaseGeneTableEntry;
+import hpoweb.uicontent.table.GeneDiseaseTableEntry;
+import hpoweb.uicontent.table.TableLabel;
+import hpoweb.util.CONSTANTS;
+import hpoweb.util.TableUtils;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -20,14 +29,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.hpowl.util.OboUtil;
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.uicontent.graph.GraphtestUI;
-import hpoweb.uicontent.table.DiseaseGeneTableEntry;
-import hpoweb.uicontent.table.GeneDiseaseTableEntry;
-import hpoweb.uicontent.table.TableLabel;
-import hpoweb.util.CONSTANTS;
-import hpoweb.util.TableUtils;
 
 public class HpoClassTabFactory {
 
@@ -106,8 +107,8 @@ public class HpoClassTabFactory {
 
 		int id = 0;
 		for (GeneDiseaseTableEntry entry : tableContent) {
-			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId + "="
-					+ entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
+			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId
+					+ "=" + entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
 
 			String diseasesString = tableUtils.getDiseasesAsHtmlString(entry.getAssociatedDiseases(), CONSTANTS.rootLocation);
 
@@ -150,8 +151,8 @@ public class HpoClassTabFactory {
 
 		int id = 0;
 		for (DiseaseGeneTableEntry entry : tableContent) {
-			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "=" + entry.getDiseaseId()
-					+ "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
+			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
+					+ entry.getDiseaseId() + "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
 			TableLabel diseasename = new TableLabel(entry.getDiseaseName(), ContentMode.HTML);
 
 			String genesString = tableUtils.getGenesAsHtmlString(entry.getAssociatedGenes(), CONSTANTS.rootLocation);
@@ -186,13 +187,12 @@ public class HpoClassTabFactory {
 		Collection<String> synonyms = dataProvider.getSynonyms();
 		if (synonyms.size() < 1) {
 			Label suggestSyn = new Label(
-					"Currently we do not have synonyms for this class. If you are missing a synonym, feel free to suggest a "
-							+ "synonym at our <a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>",
+					"Currently the HPO does not have any synonyms for this class. "
+							+ "Suggest a synonym at our <a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>",
 					ContentMode.HTML);
 			suggestSyn.addStyleName("tab-content-content");
 			vl_syns.addComponent(suggestSyn);
-		}
-		else {
+		} else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");
@@ -223,8 +223,8 @@ public class HpoClassTabFactory {
 		 * Secondary ID
 		 */
 		Label lab2 = new Label("Alternative IDs");
-		lab2.setDescription(
-				"These are other identifiers which are referring to the same HPO class. " + "These are introduced when classes are merged.");
+		lab2.setDescription("These are other identifiers which are referring to the same HPO class. "
+				+ "These are introduced when classes are merged.");
 		lab2.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab2.addStyleName("tab-content-header");
 
@@ -240,9 +240,8 @@ public class HpoClassTabFactory {
 		 * PURLs
 		 */
 		Label lab3 = new Label("PURL");
-		lab3.setDescription(
-				"This is a persistent URL. Please see <a href='https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator' target='_new'>"
-						+ "this wikipedia article</a> for more information on PURLs.");
+		lab3.setDescription("This is a persistent URL. Please see <a href='https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator' target='_new'>"
+				+ "this wikipedia article</a> for more information on PURLs.");
 		lab3.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab3.addStyleName("tab-content-header");
 		Label iriLabel = new Label("<a href='" + dataProvider.getIRI() + "' target='_new'>" + dataProvider.getIRI() + "</a>", ContentMode.HTML);
@@ -283,8 +282,7 @@ public class HpoClassTabFactory {
 		 * Logical def
 		 */
 		Label lab2 = new Label("Logical definition");
-		lab2.setDescription(
-				"This is a computer readable logical definition of the HPO class. If you want to learn more about this please see <a href='http://nar.oxfordjournals.org/content/42/D1/D966.full' target='_new'>http://nar.oxfordjournals.org/content/42/D1/D966.full</a>.");
+		lab2.setDescription("This is a computer readable logical definition of the HPO class. If you want to learn more about this please see <a href='http://nar.oxfordjournals.org/content/42/D1/D966.full' target='_new'>http://nar.oxfordjournals.org/content/42/D1/D966.full</a>.");
 		lab2.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab2.addStyleName("tab-content-header");
 
@@ -370,8 +368,7 @@ public class HpoClassTabFactory {
 						+ RandomStringUtils.randomAlphabetic(10).toUpperCase() + "</a>";
 				htmlList.add(str);
 			}
-		}
-		else {
+		} else {
 			// it's ugly to use hpData here, but the dataprovider doesn't know
 			// the labels for the parents/children
 			for (OWLClass c : classes) {
