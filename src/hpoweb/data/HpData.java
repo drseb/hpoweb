@@ -9,9 +9,9 @@ import org.semanticweb.owlapi.model.OWLClass;
 import com.vaadin.server.VaadinService;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
-import de.charite.phenowl.annotations.DiseaseGeneMapper;
 import de.charite.phenowl.hpowl.util.ExtendedOwlOntology;
 import de.charite.phenowl.hpowl.util.OwlAxiomClass;
+import hpo.DiseaseGeneMapper;
 
 public class HpData {
 
@@ -44,7 +44,6 @@ public class HpData {
 		DiseaseGeneMapper.setOrphanetPath(datapath);
 		annotationUtils.setDataPath(datapath);
 		annotationUtils.parseAssociation();
-		annotationUtils.getDiseaseGeneMapper().addCancerGeneAssociationsToDiseaseGenes();
 	}
 
 	public ExtendedOwlOntology getExtOwlOntology() {

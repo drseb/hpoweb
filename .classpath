@@ -19,5 +19,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/javautil_pheno"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

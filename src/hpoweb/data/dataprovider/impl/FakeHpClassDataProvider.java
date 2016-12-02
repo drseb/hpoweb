@@ -1,11 +1,5 @@
 package hpoweb.data.dataprovider.impl;
 
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.data.entities.DiseaseGene;
-import hpoweb.uicontent.graph.GraphtestUI;
-import hpoweb.uicontent.table.DiseaseGeneTableEntry;
-import hpoweb.uicontent.table.GeneDiseaseTableEntry;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,8 +9,13 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import com.google.common.collect.ImmutableSet;
 
-import de.charite.phenowl.annotations.DiseaseEntry;
-import de.charite.phenowl.annotations.DiseaseId;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
+import hpo.DiseaseId;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.data.entities.DiseaseGene;
+import hpoweb.uicontent.graph.GraphtestUI;
+import hpoweb.uicontent.table.DiseaseGeneTableEntry;
+import hpoweb.uicontent.table.GeneDiseaseTableEntry;
 
 public class FakeHpClassDataProvider implements IHpClassDataProvider {
 
@@ -102,7 +101,8 @@ public class FakeHpClassDataProvider implements IHpClassDataProvider {
 			ArrayList<DiseaseGene> associatedGenes = new ArrayList<DiseaseGene>();
 			if (Math.random() < 0.3) {
 				associatedGenes.add(getRandomDiseaseGene());
-			} else if (Math.random() < 0.6) {
+			}
+			else if (Math.random() < 0.6) {
 				associatedGenes.add(getRandomDiseaseGene());
 				associatedGenes.add(getRandomDiseaseGene());
 			}
@@ -123,10 +123,11 @@ public class FakeHpClassDataProvider implements IHpClassDataProvider {
 	public List<GeneDiseaseTableEntry> getGeneDiseaseTableContent() {
 		ArrayList<GeneDiseaseTableEntry> tableEntries = new ArrayList<GeneDiseaseTableEntry>();
 		for (int i = 0; i < 250; i++) {
-			ArrayList<DiseaseEntry> associatedDiseases = new ArrayList<DiseaseEntry>();
+			ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases = new ArrayList<OwlAnnotatedDiseaseEntry>();
 			if (Math.random() < 0.3) {
 				associatedDiseases.add(getRandomDisease());
-			} else if (Math.random() < 0.6) {
+			}
+			else if (Math.random() < 0.6) {
 				associatedDiseases.add(getRandomDisease());
 				associatedDiseases.add(getRandomDisease());
 			}
@@ -138,9 +139,9 @@ public class FakeHpClassDataProvider implements IHpClassDataProvider {
 		return tableEntries;
 	}
 
-	private DiseaseEntry getRandomDisease() {
+	private OwlAnnotatedDiseaseEntry getRandomDisease() {
 		DiseaseId id = new DiseaseId("OMIM", RandomStringUtils.randomNumeric(6));
-		DiseaseEntry entry = new DiseaseEntry(id, null, null);
+		OwlAnnotatedDiseaseEntry entry = new OwlAnnotatedDiseaseEntry(id, null, null);
 		entry.setName(RandomStringUtils.randomAlphabetic(8) + " " + RandomStringUtils.randomAlphabetic(4) + " syndrome");
 		return entry;
 	}

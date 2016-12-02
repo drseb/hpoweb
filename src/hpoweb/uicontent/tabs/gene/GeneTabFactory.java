@@ -14,7 +14,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.charite.phenowl.annotations.DiseaseEntry;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
 import hpoweb.uicontent.table.TableLabel;
@@ -52,14 +52,14 @@ public class GeneTabFactory {
 		lab1.addStyleName("tab-content-header");
 		vl_genes.addComponent(lab1);
 
-		Collection<DiseaseEntry> diseases = dataProvider.getAssociatedDiseases();
+		Collection<OwlAnnotatedDiseaseEntry> diseases = dataProvider.getAssociatedDiseases();
 		if (diseases.size() < 1) {
 			Label l = new Label("No diseases associated with this gene.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
 		}
 		else {
-			for (DiseaseEntry disease : diseases) {
+			for (OwlAnnotatedDiseaseEntry disease : diseases) {
 				Label l = new Label(disease.getName() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
 						+ disease.getDiseaseIdAsString() + "'>" + disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
 				l.addStyleName("tab-content-content");

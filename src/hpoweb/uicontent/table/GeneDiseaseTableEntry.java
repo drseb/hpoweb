@@ -2,13 +2,13 @@ package hpoweb.uicontent.table;
 
 import java.util.ArrayList;
 
-import de.charite.phenowl.annotations.DiseaseEntry;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 
 public class GeneDiseaseTableEntry {
 
 	private String geneId;
 	private String geneSymbol;
-	private ArrayList<DiseaseEntry> associatedDiseases;
+	private ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases;
 
 	/**
 	 * @return the geneId
@@ -27,11 +27,11 @@ public class GeneDiseaseTableEntry {
 	/**
 	 * @return the associatedDiseases
 	 */
-	public ArrayList<DiseaseEntry> getAssociatedDiseases() {
+	public ArrayList<OwlAnnotatedDiseaseEntry> getAssociatedDiseases() {
 		return associatedDiseases;
 	}
 
-	public GeneDiseaseTableEntry(String geneId, String geneSymbol, ArrayList<DiseaseEntry> associatedDiseases) {
+	public GeneDiseaseTableEntry(String geneId, String geneSymbol, ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases) {
 		super();
 		this.geneId = geneId;
 		this.geneSymbol = geneSymbol;

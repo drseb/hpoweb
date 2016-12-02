@@ -1,9 +1,5 @@
 package hpoweb.data.dataprovider.impl;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IGeneDataProvider;
-import hpoweb.uicontent.table.HpoClassTableEntry;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,17 +9,21 @@ import org.semanticweb.owlapi.model.OWLClass;
 import com.google.common.collect.HashMultimap;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
-import de.charite.phenowl.annotations.DiseaseEntry;
-import de.charite.phenowl.annotations.DiseaseId;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpo.DiseaseEntry;
+import hpo.DiseaseId;
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IGeneDataProvider;
+import hpoweb.uicontent.table.HpoClassTableEntry;
 
 public class GeneDataProvider implements IGeneDataProvider {
 
 	private Integer geneId;
 	private String symbol;
-	private HashMultimap<OWLClass, DiseaseEntry> hpClass2annotatedDiseases;
+	private HashMultimap<OWLClass, OwlAnnotatedDiseaseEntry> hpClass2annotatedDiseases;
 	private HpData hpData;
-	private ArrayList<DiseaseEntry> associatedDiseases;
+	private ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases;
 
 	public GeneDataProvider(Integer geneId, HpData hpData) {
 		this.hpData = hpData;
@@ -32,12 +32,12 @@ public class GeneDataProvider implements IGeneDataProvider {
 		this.symbol = util.getDiseaseGeneMapper().entrez2symbol.get(geneId);
 
 		hpClass2annotatedDiseases = HashMultimap.create();
-		associatedDiseases = new ArrayList<DiseaseEntry>();
+		associatedDiseases = new ArrayList<OwlAnnotatedDiseaseEntry>();
 		if (util.getDiseaseGeneMapper().entrezId2diseaseIds.containsKey(geneId)) {
 			for (DiseaseId diseaseId : util.getDiseaseGeneMapper().entrezId2diseaseIds.get(geneId)) {
 				if (!util.getDiseaseId2entry().containsKey(diseaseId))
 					continue;
-				DiseaseEntry entry = util.getDiseaseId2entry().get(diseaseId);
+				OwlAnnotatedDiseaseEntry entry = util.getDiseaseId2entry().get(diseaseId);
 				associatedDiseases.add(entry);
 				ArrayList<OWLClass> owlclasses = entry.getAllAssociatedOWLClasses();
 				for (OWLClass cls : owlclasses) {
@@ -85,7 +85,7 @@ public class GeneDataProvider implements IGeneDataProvider {
 	}
 
 	@Override
-	public Collection<DiseaseEntry> getAssociatedDiseases() {
+	public Collection<OwlAnnotatedDiseaseEntry> getAssociatedDiseases() {
 		return associatedDiseases;
 	}
 }

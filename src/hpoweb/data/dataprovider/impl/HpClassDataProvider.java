@@ -11,10 +11,11 @@ import org.semanticweb.owlapi.model.OWLClass;
 import com.google.common.collect.ImmutableSet;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
-import de.charite.phenowl.annotations.DiseaseEntry;
-import de.charite.phenowl.annotations.DiseaseId;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import de.charite.phenowl.hpowl.util.ExtendedOwlOntology;
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpo.DiseaseEntry;
+import hpo.DiseaseId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IHpClassDataProvider;
 import hpoweb.data.entities.DiseaseGene;
@@ -185,13 +186,13 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 		for (int geneId : this.associatedGeneIds) {
 			String geneSymbol = utils.getDiseaseGeneMapper().entrez2symbol.get(geneId);
 
-			ArrayList<DiseaseEntry> associatedDiseases = new ArrayList<DiseaseEntry>();
+			ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases = new ArrayList<OwlAnnotatedDiseaseEntry>();
 			HashSet<DiseaseId> diseaseIds = utils.getDiseaseGeneMapper().entrezId2diseaseIds.get(geneId);
 
 			if (diseaseIds != null)
 				for (DiseaseId diseaseId : diseaseIds) {
 					if (utils.getDiseaseId2entry().containsKey(diseaseId)) {
-						DiseaseEntry diseaseentry = utils.getDiseaseId2entry().get(diseaseId);
+						OwlAnnotatedDiseaseEntry diseaseentry = utils.getDiseaseId2entry().get(diseaseId);
 						associatedDiseases.add(diseaseentry);
 					}
 				}

@@ -1,9 +1,5 @@
 package hpoweb.data.dataprovider;
 
-import hpoweb.data.HpData;
-import hpoweb.data.entities.SearchableEntity;
-import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,10 +9,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
-import de.charite.phenowl.annotations.DiseaseEntry;
-import de.charite.phenowl.annotations.DiseaseGeneMapper;
-import de.charite.phenowl.annotations.DiseaseId;
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpo.DiseaseEntry;
+import hpo.DiseaseGeneMapper;
+import hpo.DiseaseId;
+import hpoweb.data.HpData;
+import hpoweb.data.entities.SearchableEntity;
+import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
 
 public class LazySearchbarService {
 

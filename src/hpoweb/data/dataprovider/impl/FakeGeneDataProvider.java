@@ -1,8 +1,5 @@
 package hpoweb.data.dataprovider.impl;
 
-import hpoweb.data.dataprovider.IGeneDataProvider;
-import hpoweb.uicontent.table.HpoClassTableEntry;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,8 +8,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
-import de.charite.phenowl.annotations.DiseaseEntry;
-import de.charite.phenowl.annotations.DiseaseId;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
+import hpo.DiseaseId;
+import hpoweb.data.dataprovider.IGeneDataProvider;
+import hpoweb.uicontent.table.HpoClassTableEntry;
 
 public class FakeGeneDataProvider implements IGeneDataProvider {
 
@@ -53,10 +52,10 @@ public class FakeGeneDataProvider implements IGeneDataProvider {
 	}
 
 	@Override
-	public Collection<DiseaseEntry> getAssociatedDiseases() {
+	public Collection<OwlAnnotatedDiseaseEntry> getAssociatedDiseases() {
 
 		DiseaseId id = new DiseaseId("OMIM", RandomStringUtils.randomNumeric(6));
-		DiseaseEntry entry = new DiseaseEntry(id, null, null);
+		OwlAnnotatedDiseaseEntry entry = new OwlAnnotatedDiseaseEntry(id, null, null);
 		entry.setName(RandomStringUtils.randomAlphabetic(8) + " " + RandomStringUtils.randomAlphabetic(4) + " syndrome");
 		return Lists.newArrayList(entry);
 	}

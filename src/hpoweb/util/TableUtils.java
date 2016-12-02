@@ -13,7 +13,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.charite.phenowl.annotations.DiseaseEntry;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import hpoweb.data.entities.DiseaseGene;
 
 public class TableUtils {
@@ -70,9 +70,9 @@ public class TableUtils {
 		return Joiner.on(", ").join(elems);
 	}
 
-	public String getDiseasesAsHtmlString(ArrayList<DiseaseEntry> associatedDiseases, String oldLocation) {
+	public String getDiseasesAsHtmlString(ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases, String oldLocation) {
 		ArrayList<String> elems = new ArrayList<String>();
-		for (DiseaseEntry disease : associatedDiseases) {
+		for (OwlAnnotatedDiseaseEntry disease : associatedDiseases) {
 			String nameShort = disease.getName();
 			if (nameShort.length() > 40)
 				nameShort = nameShort.substring(0, 40) + "...";

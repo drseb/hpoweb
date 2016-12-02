@@ -1,10 +1,5 @@
 package hpoweb.data.dataprovider.impl;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IDiseaseDataProvider;
-import hpoweb.data.entities.DiseaseGene;
-import hpoweb.uicontent.table.HpoClassTableEntry;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,17 +11,21 @@ import org.semanticweb.owlapi.model.OWLClass;
 import com.google.common.collect.HashMultimap;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
-import de.charite.phenowl.annotations.DiseaseEntry;
-import de.charite.phenowl.annotations.DiseaseId;
 import de.charite.phenowl.annotations.HPOAnnotation;
+import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpo.DiseaseId;
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IDiseaseDataProvider;
+import hpoweb.data.entities.DiseaseGene;
+import hpoweb.uicontent.table.HpoClassTableEntry;
 
 public class DiseaseDataProvider implements IDiseaseDataProvider {
 
 	private HpData hpData;
 	private AnnotationUtils annotationUtils;
 	private DiseaseId diseaseId;
-	private DiseaseEntry diseaseEntry;
+	private OwlAnnotatedDiseaseEntry diseaseEntry;
 	private ArrayList<HPOAnnotation> annotations;
 	private HashSet<Integer> diseaseGeneIds;
 	private HashSet<DiseaseGene> diseaseGenes;
@@ -36,7 +35,7 @@ public class DiseaseDataProvider implements IDiseaseDataProvider {
 		this.diseaseId = diseaseId;
 		this.annotationUtils = hpData.getAnnotationUtils();
 		this.diseaseEntry = annotationUtils.getDiseaseId2entry().get(diseaseId);
-		this.annotations = diseaseEntry.getAnnotations();
+		this.annotations = diseaseEntry.getAnnotationsOwlClasses();
 		// genes for this disease
 		this.diseaseGeneIds = annotationUtils.getDiseaseGeneMapper().diseaseId2entrezIds.get(diseaseId);
 		diseaseGenes = new HashSet<DiseaseGene>();
