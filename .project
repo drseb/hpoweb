@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>phenOwl</project>
+		<project>javautil_pheno</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
