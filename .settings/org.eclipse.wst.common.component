@@ -5,6 +5,9 @@
         <dependent-module archiveName="phenOwl.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/phenOwl/phenOwl">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="javautil_pheno.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/javautil_pheno/javautil_pheno">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="hpoweb"/>
         <property name="java-output-path" value="/hpoweb/build/classes"/>
     </wb-module>
