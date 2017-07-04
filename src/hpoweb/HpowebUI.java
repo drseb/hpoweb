@@ -172,8 +172,8 @@ public class HpowebUI extends UI {
 		 * Bottom part
 		 */
 		Label version = new Label("Ontology version: " + ontologyVersion);
-		Label copyright = new Label("Copyright 2015 -  The Human Phenotype Ontology Project");
-		Link feedback = new Link("Question, Comments, Feedback: sebastian.koehler@charite.de", new ExternalResource("http://drseb.github.io/"));
+		Label copyright = new Label("Copyright 2017 -  Sebastian Köhler & The Human Phenotype Ontology Project");
+		Link feedback = new Link("Question, Comments, Feedback: dr.sebastian.koehler@gmail.com", new ExternalResource("http://drseb.github.io/"));
 		addLabelRow(gridContainer, version);
 		addLabelRow(gridContainer, copyright);
 		addLabelRow(gridContainer, feedback);
