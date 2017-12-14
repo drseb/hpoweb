@@ -11,8 +11,8 @@ import com.google.common.collect.HashMultimap;
 import de.charite.phenowl.annotations.AnnotationUtils;
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import de.charite.phenowl.hpowl.util.OboUtil;
-import hpo.DiseaseEntry;
-import hpo.DiseaseId;
+import hpo.Item;
+import hpo.ItemId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
@@ -34,7 +34,7 @@ public class GeneDataProvider implements IGeneDataProvider {
 		hpClass2annotatedDiseases = HashMultimap.create();
 		associatedDiseases = new ArrayList<OwlAnnotatedDiseaseEntry>();
 		if (util.getDiseaseGeneMapper().entrezId2diseaseIds.containsKey(geneId)) {
-			for (DiseaseId diseaseId : util.getDiseaseGeneMapper().entrezId2diseaseIds.get(geneId)) {
+			for (ItemId diseaseId : util.getDiseaseGeneMapper().entrezId2diseaseIds.get(geneId)) {
 				if (!util.getDiseaseId2entry().containsKey(diseaseId))
 					continue;
 				OwlAnnotatedDiseaseEntry entry = util.getDiseaseId2entry().get(diseaseId);
@@ -73,7 +73,7 @@ public class GeneDataProvider implements IGeneDataProvider {
 			String hpoId = OboUtil.IRI2ID(cls.getIRI());
 			String hpoLabel = hpData.getExtOwlOntology().getLabel(cls.getIRI());
 			String description = "This annotation is supported by:<br>";
-			for (DiseaseEntry e : hpClass2annotatedDiseases.get(cls)) {
+			for (Item e : hpClass2annotatedDiseases.get(cls)) {
 				description += " - " + e.getName() + "<br>";
 			}
 			HpoClassTableEntry entry = new HpoClassTableEntry(hpoId, hpoLabel, description);

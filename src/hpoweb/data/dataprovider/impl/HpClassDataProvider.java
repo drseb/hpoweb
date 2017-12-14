@@ -14,8 +14,8 @@ import de.charite.phenowl.annotations.AnnotationUtils;
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import de.charite.phenowl.hpowl.util.ExtendedOwlOntology;
 import de.charite.phenowl.hpowl.util.OboUtil;
-import hpo.DiseaseEntry;
-import hpo.DiseaseId;
+import hpo.Item;
+import hpo.ItemId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IHpClassDataProvider;
 import hpoweb.data.entities.DiseaseGene;
@@ -36,7 +36,7 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 	private Set<String> synonyms;
 	private String textdef;
 	private String logicaldef;
-	private HashSet<DiseaseId> associatedDiseaseIds;
+	private HashSet<ItemId> associatedDiseaseIds;
 	private AnnotationUtils utils;
 	private HashSet<Integer> associatedGeneIds;
 
@@ -158,8 +158,8 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 		if (this.associatedDiseaseIds == null)
 			return tableentries;
 
-		for (DiseaseId dID : this.associatedDiseaseIds) {
-			DiseaseEntry entry = utils.getDiseaseId2entry().get(dID);
+		for (ItemId dID : this.associatedDiseaseIds) {
+			Item entry = utils.getDiseaseId2entry().get(dID);
 			String diseaseId = dID.toString();
 			String diseaseName = entry.getName();
 			ArrayList<DiseaseGene> associatedGenes = new ArrayList<DiseaseGene>();
@@ -187,10 +187,10 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 			String geneSymbol = utils.getDiseaseGeneMapper().entrez2symbol.get(geneId);
 
 			ArrayList<OwlAnnotatedDiseaseEntry> associatedDiseases = new ArrayList<OwlAnnotatedDiseaseEntry>();
-			HashSet<DiseaseId> diseaseIds = utils.getDiseaseGeneMapper().entrezId2diseaseIds.get(geneId);
+			HashSet<ItemId> diseaseIds = utils.getDiseaseGeneMapper().entrezId2diseaseIds.get(geneId);
 
 			if (diseaseIds != null)
-				for (DiseaseId diseaseId : diseaseIds) {
+				for (ItemId diseaseId : diseaseIds) {
 					if (utils.getDiseaseId2entry().containsKey(diseaseId)) {
 						OwlAnnotatedDiseaseEntry diseaseentry = utils.getDiseaseId2entry().get(diseaseId);
 						associatedDiseases.add(diseaseentry);

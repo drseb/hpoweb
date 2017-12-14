@@ -37,7 +37,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-import hpo.DiseaseId;
+import hpo.ItemId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.dataprovider.IEntityDataProvider;
@@ -286,7 +286,7 @@ public class HpowebUI extends UI {
 		}
 		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
-			DiseaseId diseaseId = parseDiseaseId(request);
+			ItemId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
 				new Notification("Invalid disease id input",
 						"<br/><br/>Can't parse disease id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
@@ -433,12 +433,12 @@ public class HpowebUI extends UI {
 		return geneIdInt;
 	}
 
-	private DiseaseId parseDiseaseId(VaadinRequest request) {
+	private ItemId parseDiseaseId(VaadinRequest request) {
 		if (!doParseHpo)
 			return null;
 		String diseaseIdStr = request.getParameter(CONSTANTS.diseaseRequestId);
 
-		DiseaseId diseaseId = new DiseaseId(diseaseIdStr);
+		ItemId diseaseId = new ItemId(diseaseIdStr);
 		if (!hpData.getAnnotationUtils().getDiseaseId2entry().containsKey(diseaseId)) {
 			return null;
 		}

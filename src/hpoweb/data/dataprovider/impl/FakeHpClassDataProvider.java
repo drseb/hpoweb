@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import com.google.common.collect.ImmutableSet;
 
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
-import hpo.DiseaseId;
+import hpo.ItemId;
 import hpoweb.data.dataprovider.IHpClassDataProvider;
 import hpoweb.data.entities.DiseaseGene;
 import hpoweb.uicontent.graph.GraphtestUI;
@@ -140,7 +140,7 @@ public class FakeHpClassDataProvider implements IHpClassDataProvider {
 	}
 
 	private OwlAnnotatedDiseaseEntry getRandomDisease() {
-		DiseaseId id = new DiseaseId("OMIM", RandomStringUtils.randomNumeric(6));
+		ItemId id = new ItemId("OMIM", RandomStringUtils.randomNumeric(6));
 		OwlAnnotatedDiseaseEntry entry = new OwlAnnotatedDiseaseEntry(id, null, null);
 		entry.setName(RandomStringUtils.randomAlphabetic(8) + " " + RandomStringUtils.randomAlphabetic(4) + " syndrome");
 		return entry;

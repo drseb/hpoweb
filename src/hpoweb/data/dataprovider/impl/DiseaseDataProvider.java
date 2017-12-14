@@ -14,7 +14,7 @@ import de.charite.phenowl.annotations.AnnotationUtils;
 import de.charite.phenowl.annotations.HPOAnnotation;
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import de.charite.phenowl.hpowl.util.OboUtil;
-import hpo.DiseaseId;
+import hpo.ItemId;
 import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
 import hpoweb.data.entities.DiseaseGene;
@@ -24,13 +24,13 @@ public class DiseaseDataProvider implements IDiseaseDataProvider {
 
 	private HpData hpData;
 	private AnnotationUtils annotationUtils;
-	private DiseaseId diseaseId;
+	private ItemId diseaseId;
 	private OwlAnnotatedDiseaseEntry diseaseEntry;
 	private ArrayList<HPOAnnotation> annotations;
 	private HashSet<Integer> diseaseGeneIds;
 	private HashSet<DiseaseGene> diseaseGenes;
 
-	public DiseaseDataProvider(DiseaseId diseaseId, HpData hpData) {
+	public DiseaseDataProvider(ItemId diseaseId, HpData hpData) {
 		this.hpData = hpData;
 		this.diseaseId = diseaseId;
 		this.annotationUtils = hpData.getAnnotationUtils();

@@ -9,7 +9,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
-import hpo.DiseaseId;
+import hpo.ItemId;
 import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
 
@@ -54,7 +54,7 @@ public class FakeGeneDataProvider implements IGeneDataProvider {
 	@Override
 	public Collection<OwlAnnotatedDiseaseEntry> getAssociatedDiseases() {
 
-		DiseaseId id = new DiseaseId("OMIM", RandomStringUtils.randomNumeric(6));
+		ItemId id = new ItemId("OMIM", RandomStringUtils.randomNumeric(6));
 		OwlAnnotatedDiseaseEntry entry = new OwlAnnotatedDiseaseEntry(id, null, null);
 		entry.setName(RandomStringUtils.randomAlphabetic(8) + " " + RandomStringUtils.randomAlphabetic(4) + " syndrome");
 		return Lists.newArrayList(entry);

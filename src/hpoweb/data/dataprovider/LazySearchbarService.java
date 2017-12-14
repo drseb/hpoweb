@@ -10,9 +10,9 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
 import de.charite.phenowl.hpowl.util.OboUtil;
-import hpo.DiseaseEntry;
 import hpo.DiseaseGeneMapper;
-import hpo.DiseaseId;
+import hpo.Item;
+import hpo.ItemId;
 import hpoweb.data.HpData;
 import hpoweb.data.entities.SearchableEntity;
 import hpoweb.data.entities.SearchableEntity.SearchableEntityType;
@@ -89,8 +89,8 @@ public class LazySearchbarService {
 			 * Diseases
 			 */
 			AnnotationUtils annotationUtils = hpdata.getAnnotationUtils();
-			for (DiseaseId id : annotationUtils.getDiseaseId2entry().keySet()) {
-				DiseaseEntry diseaseEntry = annotationUtils.getDiseaseId2entry().get(id);
+			for (ItemId id : annotationUtils.getDiseaseId2entry().keySet()) {
+				Item diseaseEntry = annotationUtils.getDiseaseId2entry().get(id);
 				String diseaseId = diseaseEntry.getDiseaseIdAsString();
 				String searchAble = diseaseId + " " + diseaseEntry.getName();
 
