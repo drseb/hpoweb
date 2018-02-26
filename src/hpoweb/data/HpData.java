@@ -1,17 +1,21 @@
 package hpoweb.data;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.vaadin.server.VaadinService;
 
 import de.charite.phenowl.annotations.AnnotationUtils;
 import de.charite.phenowl.hpowl.util.ExtendedOwlOntology;
 import de.charite.phenowl.hpowl.util.OwlAxiomClass;
 import hpo.DiseaseGeneMapper;
+import hpoweb.uicontent.table.HpoClassTableEntry;
 
 public class HpData {
 
@@ -57,4 +61,27 @@ public class HpData {
 	public ExtendedOwlOntology getExtOwlOntologyWithLogicalDefs() {
 		return extOwlOntologyWithLogicalDefs;
 	}
+
+	/**
+	 * @param tableContent
+	 * @return
+	 */
+	public HashMultimap<OWLClass, OWLClass> getLevelOneBins(List<HpoClassTableEntry> tableContent) {
+
+		HashMultimap<OWLClass, OWLClass> ret = HashMultimap.create();
+
+		ImmutableSet<OWLClass> targets = extOwlOntology.getChildrenAsserted(extOwlOntology.getClassForId("HP:0000118"));
+
+		for (HpoClassTableEntry hpoCTE : tableContent) {
+			OWLClass cls = extOwlOntology.getClassForId(hpoCTE.getHpoId());
+			ImmutableSet<OWLClass> anc = extOwlOntology.getAncestorsAsserted(cls);
+			for (OWLClass a : anc) {
+				if (targets.contains(a)) {
+					ret.put(a, cls);
+				}
+			}
+		}
+		return ret;
+	}
+
 }

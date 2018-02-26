@@ -62,8 +62,8 @@ public class TableUtils {
 	public String getGenesAsHtmlString(ArrayList<DiseaseGene> associatedGenes, String oldLocation) {
 		ArrayList<String> elems = new ArrayList<String>();
 		for (DiseaseGene g : associatedGenes) {
-			String gStr = g.getGeneSymbol() + " (<a href='" + oldLocation + "?" + CONSTANTS.geneRequestId + "=" + g.getGeneId() + "'>" + g.getGeneId()
-					+ "</a>)";
+			String gStr = g.getGeneSymbol() + " (<a href='" + oldLocation + "?" + CONSTANTS.geneRequestId + "="
+					+ g.getGeneId() + "'>" + g.getGeneId() + "</a>)";
 			elems.add(gStr);
 		}
 
@@ -76,8 +76,8 @@ public class TableUtils {
 			String nameShort = disease.getName();
 			if (nameShort.length() > 40)
 				nameShort = nameShort.substring(0, 40) + "...";
-			String diseaseStr = nameShort + " (<a href='" + oldLocation + "?" + CONSTANTS.diseaseRequestId + "=" + disease.getDiseaseIdAsString()
-					+ "'>" + disease.getDiseaseIdAsString() + "</a>)";
+			String diseaseStr = nameShort + " (<a href='" + oldLocation + "?" + CONSTANTS.diseaseRequestId + "="
+					+ disease.getDiseaseIdAsString() + "'>" + disease.getDiseaseIdAsString() + "</a>)";
 			elems.add(diseaseStr);
 		}
 

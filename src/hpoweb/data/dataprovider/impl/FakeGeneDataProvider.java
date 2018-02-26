@@ -10,6 +10,7 @@ import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import hpo.ItemId;
+import hpoweb.data.HpData;
 import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
 
@@ -44,7 +45,8 @@ public class FakeGeneDataProvider implements IGeneDataProvider {
 		for (int i = 0; i < 50; i++) {
 
 			String hpoId = "HP:" + RandomStringUtils.randomNumeric(7);
-			String hpoLab = "Abnormality of " + RandomStringUtils.randomAlphabetic(4) + " " + RandomStringUtils.randomAlphabetic(8);
+			String hpoLab = "Abnormality of " + RandomStringUtils.randomAlphabetic(4) + " "
+					+ RandomStringUtils.randomAlphabetic(8);
 			HpoClassTableEntry entry = new HpoClassTableEntry(hpoId, hpoLab, "fake description here");
 			tableEntries.add(entry);
 		}
@@ -56,8 +58,20 @@ public class FakeGeneDataProvider implements IGeneDataProvider {
 
 		ItemId id = new ItemId("OMIM", RandomStringUtils.randomNumeric(6));
 		OwlAnnotatedDiseaseEntry entry = new OwlAnnotatedDiseaseEntry(id, null, null);
-		entry.setName(RandomStringUtils.randomAlphabetic(8) + " " + RandomStringUtils.randomAlphabetic(4) + " syndrome");
+		entry.setName(
+				RandomStringUtils.randomAlphabetic(8) + " " + RandomStringUtils.randomAlphabetic(4) + " syndrome");
 		return Lists.newArrayList(entry);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hpoweb.data.dataprovider.IEntityDataProvider#getHpData()
+	 */
+	@Override
+	public HpData getHpData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

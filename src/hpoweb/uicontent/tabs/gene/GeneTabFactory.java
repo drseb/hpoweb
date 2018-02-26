@@ -10,14 +10,14 @@ import com.sebworks.vaadstrap.Row;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
 import hpoweb.data.dataprovider.IGeneDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
-import hpoweb.uicontent.table.TableLabel;
+import hpoweb.uicontent.tabs.TabsUtil;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
 
@@ -57,11 +57,11 @@ public class GeneTabFactory {
 			Label l = new Label("No diseases associated with this gene.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		}
-		else {
+		} else {
 			for (OwlAnnotatedDiseaseEntry disease : diseases) {
-				Label l = new Label(disease.getName() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
-						+ disease.getDiseaseIdAsString() + "'>" + disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
+				Label l = new Label(disease.getName() + " (<a href='" + CONSTANTS.rootLocation + "?"
+						+ CONSTANTS.diseaseRequestId + "=" + disease.getDiseaseIdAsString() + "'>"
+						+ disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
 				l.addStyleName("tab-content-content");
 				vl_genes.addComponent(l);
 			}
@@ -74,42 +74,51 @@ public class GeneTabFactory {
 	private VerticalLayout getAssociatedHpoClasses(IGeneDataProvider dataProvider) {
 		VerticalLayout tableVL = new VerticalLayout();
 		tableVL.setSizeFull();
+		List<HpoClassTableEntry> tableContent = dataProvider.getAssociatedHpoClasses();
 
-		Label lab1 = new Label("Associated HPO classes");
+		int numberOfHpoTerms = tableContent.size();
+
+		if (numberOfHpoTerms < 1) {
+			tableVL.addStyleName("tab-content-vl");
+			return tableVL;
+		}
+
+		Label lab1 = new Label(numberOfHpoTerms + " associated HPO classes");
 		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab1.addStyleName("tab-content-header");
 		tableVL.addComponent(lab1);
 
-		Table table = new Table();
-		table.addContainerProperty("HPO id", TableLabel.class, null);
-		table.addContainerProperty("HPO label", TableLabel.class, null);
-		table.setSizeFull();
-		table.setHeight("275px");
+		// Table table = new Table();
+		// table.addContainerProperty("HPO id", TableLabel.class, null);
+		// table.addContainerProperty("HPO label", TableLabel.class, null);
+		// table.setSizeFull();
+		// table.setHeight("275px");
+		//
+		// int id = 0;
+		// for (HpoClassTableEntry entry : tableContent) {
+		// TableLabel hpoid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?"
+		// + CONSTANTS.hpRequestId + "="
+		// + entry.getHpoId() + "'>" + entry.getHpoId() + "</a>", ContentMode.HTML);
+		// TableLabel hpolabel = new TableLabel(entry.getHpoLabel(), ContentMode.HTML);
+		// hpoid.setDescription(entry.getDescription());
+		// hpolabel.setDescription(entry.getDescription());
+		//
+		// Integer itemId = new Integer(id++);
+		// table.addItem(new Object[] { hpoid, hpolabel }, itemId);
+		// }
+		//
+		// tableVL.addComponent(table);
 
-		List<HpoClassTableEntry> tableContent = dataProvider.getAssociatedHpoClasses();
-
-		int id = 0;
-		for (HpoClassTableEntry entry : tableContent) {
-			TableLabel hpoid = new TableLabel(
-					"<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.hpRequestId + "=" + entry.getHpoId() + "'>" + entry.getHpoId() + "</a>",
-					ContentMode.HTML);
-			TableLabel hpolabel = new TableLabel(entry.getHpoLabel(), ContentMode.HTML);
-			hpoid.setDescription(entry.getDescription());
-			hpolabel.setDescription(entry.getDescription());
-
-			Integer itemId = new Integer(id++);
-			table.addItem(new Object[] { hpoid, hpolabel }, itemId);
-		}
-
-		tableVL.addComponent(table);
+		TreeTable ttable = TabsUtil.getTreeTableHpoAnnotations(dataProvider, tableContent);
+		tableVL.addComponent(ttable);
 
 		String geneId = dataProvider.getId();
 		String header = "Export for " + geneId;
 		String fileName = "hpoterms_for_" + geneId;
-		tableUtils.addDownloadButtons(tableVL, table, fileName, header);
+		tableUtils.addDownloadButtons(tableVL, ttable, fileName, header);
 
 		tableVL.addStyleName("tab-content-vl");
-		tableVL.setExpandRatio(table, 1f);
+		tableVL.setExpandRatio(ttable, 1f);
 		tableVL.setHeight("350px");
 		return tableVL;
 	}

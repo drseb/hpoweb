@@ -1,10 +1,10 @@
 package hpoweb.data.dataprovider;
 
-import hpoweb.data.entities.DiseaseGene;
-import hpoweb.uicontent.table.HpoClassTableEntry;
-
 import java.util.Collection;
 import java.util.List;
+
+import hpoweb.data.entities.DiseaseGene;
+import hpoweb.uicontent.table.HpoClassTableEntry;
 
 public interface IDiseaseDataProvider extends IEntityDataProvider {
 

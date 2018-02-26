@@ -1,9 +1,5 @@
 package hpoweb.data.dataprovider.impl;
 
-import hpoweb.data.dataprovider.IDiseaseDataProvider;
-import hpoweb.data.entities.DiseaseGene;
-import hpoweb.uicontent.table.HpoClassTableEntry;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +8,11 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.google.common.collect.ImmutableSet;
+
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IDiseaseDataProvider;
+import hpoweb.data.entities.DiseaseGene;
+import hpoweb.uicontent.table.HpoClassTableEntry;
 
 public class FakeDiseaseDataProvider implements IDiseaseDataProvider {
 
@@ -38,8 +39,10 @@ public class FakeDiseaseDataProvider implements IDiseaseDataProvider {
 	public Collection<String> getAlternativeNames() {
 		double rand = Math.random();
 		if (rand > 0.3) {
-			return ImmutableSet.of(RandomStringUtils.randomAlphabetic(10).toUpperCase(), RandomStringUtils.randomAlphabetic(7).toUpperCase(),
-					RandomStringUtils.randomAlphabetic(9).toUpperCase(), RandomStringUtils.randomAlphabetic(15).toUpperCase(),
+			return ImmutableSet.of(RandomStringUtils.randomAlphabetic(10).toUpperCase(),
+					RandomStringUtils.randomAlphabetic(7).toUpperCase(),
+					RandomStringUtils.randomAlphabetic(9).toUpperCase(),
+					RandomStringUtils.randomAlphabetic(15).toUpperCase(),
 					"ghfsadgfibba gfisbafkba hfjksbfkjsabf hfjksdhfsaf hflhsa fhsdahfa hfldshflsad hflsahfkldsaf");
 		} else {
 			return ImmutableSet.of();
@@ -52,7 +55,8 @@ public class FakeDiseaseDataProvider implements IDiseaseDataProvider {
 		for (int i = 0; i < 50; i++) {
 
 			String hpoId = "HP:" + RandomStringUtils.randomNumeric(7);
-			String hpoLab = "Abnormality of " + RandomStringUtils.randomAlphabetic(4) + " " + RandomStringUtils.randomAlphabetic(8);
+			String hpoLab = "Abnormality of " + RandomStringUtils.randomAlphabetic(4) + " "
+					+ RandomStringUtils.randomAlphabetic(8);
 			HpoClassTableEntry entry = new HpoClassTableEntry(hpoId, hpoLab, "fake description here");
 			tableEntries.add(entry);
 		}
@@ -75,5 +79,16 @@ public class FakeDiseaseDataProvider implements IDiseaseDataProvider {
 			return ImmutableSet.of();
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hpoweb.data.dataprovider.IEntityDataProvider#getHpData()
+	 */
+	@Override
+	public HpData getHpData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

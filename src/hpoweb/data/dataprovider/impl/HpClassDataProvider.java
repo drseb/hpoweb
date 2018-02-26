@@ -39,9 +39,11 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 	private HashSet<ItemId> associatedDiseaseIds;
 	private AnnotationUtils utils;
 	private HashSet<Integer> associatedGeneIds;
+	private HpData hpData;
 
 	public HpClassDataProvider(OWLClass hpClass, HpData hpData) {
 		this.hpClass = hpClass;
+		this.hpData = hpData;
 
 		ExtendedOwlOntology ontology = hpData.getExtOwlOntology();
 		this.label = ontology.getLabel(hpClass.getIRI());
@@ -200,5 +202,15 @@ public class HpClassDataProvider implements IHpClassDataProvider {
 			tableentries.add(tableentry);
 		}
 		return tableentries;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hpoweb.data.dataprovider.IEntityDataProvider#getHpData()
+	 */
+	@Override
+	public HpData getHpData() {
+		return hpData;
 	}
 }

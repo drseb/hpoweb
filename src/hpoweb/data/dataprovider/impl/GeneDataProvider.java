@@ -88,4 +88,14 @@ public class GeneDataProvider implements IGeneDataProvider {
 	public Collection<OwlAnnotatedDiseaseEntry> getAssociatedDiseases() {
 		return associatedDiseases;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hpoweb.data.dataprovider.IEntityDataProvider#getHpData()
+	 */
+	@Override
+	public HpData getHpData() {
+		return hpData;
+	}
 }

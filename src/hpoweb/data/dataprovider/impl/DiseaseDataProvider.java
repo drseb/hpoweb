@@ -108,8 +108,7 @@ public class DiseaseDataProvider implements IDiseaseDataProvider {
 
 			if (multipleAnnotations) {
 				buffer.append(" Meta data for annotation " + i + ":<br>");
-			}
-			else {
+			} else {
 				buffer.append(" Meta data for this annotation:<br>");
 			}
 
@@ -132,5 +131,15 @@ public class DiseaseDataProvider implements IDiseaseDataProvider {
 	@Override
 	public Collection<DiseaseGene> getAssociatedGenes() {
 		return diseaseGenes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hpoweb.data.dataprovider.IEntityDataProvider#getHpData()
+	 */
+	@Override
+	public HpData getHpData() {
+		return hpData;
 	}
 }
