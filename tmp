@@ -1,0 +1,1 @@
+page.setUriFragment("!" + SampleCrudView2.VIEW_NAME + "/" + fragmentParameter, false);

@@ -20,7 +20,6 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.jsclipboard.JSClipboard;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -142,13 +141,11 @@ public class HpowebUI extends UI {
 			hpoClassTabFactory.addTermInfoElements(gridContainer, (IHpClassDataProvider) dataProvider);
 
 			addExtraButtons(gridContainer, (IHpClassDataProvider) dataProvider);
-		}
-		else if (dataProvider instanceof IDiseaseDataProvider) {
+		} else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoElements(gridContainer, (IDiseaseDataProvider) dataProvider);
-		}
-		else if (dataProvider instanceof IGeneDataProvider) {
+		} else if (dataProvider instanceof IGeneDataProvider) {
 
 			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
 			geneTabFactory.addGeneInfoElements(gridContainer, (IGeneDataProvider) dataProvider);
@@ -161,8 +158,7 @@ public class HpowebUI extends UI {
 		String ontologyVersion;
 		if (doParseHpo) {
 			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
-		}
-		else
+		} else
 
 		{
 			ontologyVersion = "some ontology version here";
@@ -173,7 +169,8 @@ public class HpowebUI extends UI {
 		 */
 		Label version = new Label("Ontology version: " + ontologyVersion);
 		Label copyright = new Label("Copyright 2017 -  Sebastian Köhler & The Human Phenotype Ontology Project");
-		Link feedback = new Link("Question, Comments, Feedback: dr.sebastian.koehler@gmail.com", new ExternalResource("http://drseb.github.io/"));
+		Link feedback = new Link("Question, Comments, Feedback: dr.sebastian.koehler@gmail.com",
+				new com.vaadin.server.ExternalResource("http://drseb.github.io/"));
 		addLabelRow(gridContainer, version);
 		addLabelRow(gridContainer, copyright);
 		addLabelRow(gridContainer, feedback);
@@ -252,39 +249,36 @@ public class HpowebUI extends UI {
 
 			OWLClass hpClass = parseHpId(request);
 			if (hpClass == null && doParseHpo) {
-				new Notification("Invalid HPO id input", "<br/><br/>Can't parse HPO id from '" + request.getParameter(CONSTANTS.hpRequestId) + "'",
+				new Notification("Invalid HPO id input",
+						"<br/><br/>Can't parse HPO id from '" + request.getParameter(CONSTANTS.hpRequestId) + "'",
 						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return null;
 			}
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
 				new Notification("Invalid gene id input",
-						"<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'", Notification.Type.ERROR_MESSAGE,
-						true).show(Page.getCurrent());
+						"<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
+						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return null;
 			}
 
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
 			ItemId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
@@ -296,15 +290,14 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		}
-		else {
-			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
-					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true)
-							.show(Page.getCurrent());
+		} else {
+			new Notification("Invalid URL",
+					"<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
+							+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ",
+					Notification.Type.WARNING_MESSAGE, true).show(Page.getCurrent());
 			return null;
 		}
 		return dataProvider;
