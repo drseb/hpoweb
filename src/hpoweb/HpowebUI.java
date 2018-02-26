@@ -2,12 +2,6 @@ package hpoweb;
 
 import java.util.Map;
 
-import javax.servlet.annotation.WebServlet;
-
-import org.semanticweb.owlapi.model.OWLClass;
-import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
-import org.vaadin.viritin.fields.LazyComboBox;
-
 import com.sebworks.vaadstrap.Col;
 import com.sebworks.vaadstrap.ColMod;
 import com.sebworks.vaadstrap.Container;
@@ -36,6 +30,12 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+
+import javax.servlet.annotation.WebServlet;
+
+import org.semanticweb.owlapi.model.OWLClass;
+import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
+import org.vaadin.viritin.fields.LazyComboBox;
 
 import hpo.ItemId;
 import hpoweb.data.HpData;
@@ -142,13 +142,11 @@ public class HpowebUI extends UI {
 			hpoClassTabFactory.addTermInfoElements(gridContainer, (IHpClassDataProvider) dataProvider);
 
 			addExtraButtons(gridContainer, (IHpClassDataProvider) dataProvider);
-		}
-		else if (dataProvider instanceof IDiseaseDataProvider) {
+		} else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoElements(gridContainer, (IDiseaseDataProvider) dataProvider);
-		}
-		else if (dataProvider instanceof IGeneDataProvider) {
+		} else if (dataProvider instanceof IGeneDataProvider) {
 
 			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
 			geneTabFactory.addGeneInfoElements(gridContainer, (IGeneDataProvider) dataProvider);
@@ -161,8 +159,7 @@ public class HpowebUI extends UI {
 		String ontologyVersion;
 		if (doParseHpo) {
 			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
-		}
-		else
+		} else
 
 		{
 			ontologyVersion = "some ontology version here";
@@ -172,8 +169,8 @@ public class HpowebUI extends UI {
 		 * Bottom part
 		 */
 		Label version = new Label("Ontology version: " + ontologyVersion);
-		Label copyright = new Label("Copyright 2017 -  Sebastian Köhler & The Human Phenotype Ontology Project");
-		Link feedback = new Link("Question, Comments, Feedback: dr.sebastian.koehler@gmail.com", new ExternalResource("http://drseb.github.io/"));
+		Label copyright = new Label("Copyright 2018 -  Sebastian Köhler & The Phenomics Group Berlin");
+		Link feedback = new Link("Contact: dr.sebastian.koehler@gmail.com", new ExternalResource("http://phenomics.github.io/"));
 		addLabelRow(gridContainer, version);
 		addLabelRow(gridContainer, copyright);
 		addLabelRow(gridContainer, feedback);
@@ -259,13 +256,11 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
 
 			Integer geneId = parseGeneId(request);
 			if (geneId == null && doParseHpo) {
@@ -278,13 +273,11 @@ public class HpowebUI extends UI {
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		}
-		else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
 
 			ItemId diseaseId = parseDiseaseId(request);
 			if (diseaseId == null && doParseHpo) {
@@ -296,12 +289,10 @@ public class HpowebUI extends UI {
 
 			if (doParseHpo) {
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			}
-			else {
+			} else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		}
-		else {
+		} else {
 			new Notification("Invalid URL", "<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
 					+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ", Notification.Type.WARNING_MESSAGE, true)
 							.show(Page.getCurrent());
