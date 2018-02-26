@@ -1,20 +1,8 @@
 package hpoweb.uicontent.tabs.hpoclass;
 
-import hpoweb.data.HpData;
-import hpoweb.data.dataprovider.IHpClassDataProvider;
-import hpoweb.uicontent.graph.GraphtestUI;
-import hpoweb.uicontent.table.DiseaseGeneTableEntry;
-import hpoweb.uicontent.table.GeneDiseaseTableEntry;
-import hpoweb.uicontent.table.TableLabel;
-import hpoweb.util.CONSTANTS;
-import hpoweb.util.TableUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import com.google.common.base.Joiner;
 import com.sebworks.vaadstrap.Col;
@@ -28,7 +16,18 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.semanticweb.owlapi.model.OWLClass;
+
 import de.charite.phenowl.hpowl.util.OboUtil;
+import hpoweb.data.HpData;
+import hpoweb.data.dataprovider.IHpClassDataProvider;
+import hpoweb.uicontent.graph.GraphtestUI;
+import hpoweb.uicontent.table.DiseaseGeneTableEntry;
+import hpoweb.uicontent.table.GeneDiseaseTableEntry;
+import hpoweb.uicontent.table.TableLabel;
+import hpoweb.util.CONSTANTS;
+import hpoweb.util.TableUtils;
 
 public class HpoClassTabFactory {
 
@@ -92,7 +91,12 @@ public class HpoClassTabFactory {
 		VerticalLayout tableVL = new VerticalLayout();
 		tableVL.setSizeFull();
 
-		Label lab1 = new Label("Associated genes");
+		List<GeneDiseaseTableEntry> tableContent = dataProvider.getGeneDiseaseTableContent();
+
+		int numberOfDiseases = tableContent.size();
+
+		Label lab1 = new Label(numberOfDiseases + " associated genes");
+
 		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab1.addStyleName("tab-content-header");
 		tableVL.addComponent(lab1);
@@ -103,17 +107,15 @@ public class HpoClassTabFactory {
 		table.setSizeFull();
 		table.setHeight("275px");
 
-		List<GeneDiseaseTableEntry> tableContent = dataProvider.getGeneDiseaseTableContent();
-
 		int id = 0;
 		for (GeneDiseaseTableEntry entry : tableContent) {
-			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId
-					+ "=" + entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
+			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.geneRequestId + "="
+					+ entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)", ContentMode.HTML);
 
 			String diseasesString = tableUtils.getDiseasesAsHtmlString(entry.getAssociatedDiseases(), CONSTANTS.rootLocation);
 
 			TableLabel diseases = new TableLabel(diseasesString, ContentMode.HTML);
-			Integer itemId = new Integer(id++);
+			Integer itemId = Integer.valueOf(id++);
 			table.addItem(new Object[] { geneEntry, diseases }, itemId);
 		}
 
@@ -134,8 +136,12 @@ public class HpoClassTabFactory {
 	private VerticalLayout getAssociatedDiseasesTab(IHpClassDataProvider dataProvider) {
 		VerticalLayout tableVL = new VerticalLayout();
 		tableVL.setSizeFull();
+		List<DiseaseGeneTableEntry> tableContent = dataProvider.getDiseaseGeneTableContent();
 
-		Label lab1 = new Label("Associated diseases");
+		int numberOfDiseases = tableContent.size();
+
+		Label lab1 = new Label(numberOfDiseases + " associated diseases");
+
 		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab1.addStyleName("tab-content-header");
 		tableVL.addComponent(lab1);
@@ -147,18 +153,16 @@ public class HpoClassTabFactory {
 		table.setSizeFull();
 		table.setHeight("275px");
 
-		List<DiseaseGeneTableEntry> tableContent = dataProvider.getDiseaseGeneTableContent();
-
 		int id = 0;
 		for (DiseaseGeneTableEntry entry : tableContent) {
-			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "="
-					+ entry.getDiseaseId() + "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
+			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?" + CONSTANTS.diseaseRequestId + "=" + entry.getDiseaseId()
+					+ "'>" + entry.getDiseaseId() + "</a>", ContentMode.HTML);
 			TableLabel diseasename = new TableLabel(entry.getDiseaseName(), ContentMode.HTML);
 
 			String genesString = tableUtils.getGenesAsHtmlString(entry.getAssociatedGenes(), CONSTANTS.rootLocation);
 
 			TableLabel genes = new TableLabel(genesString, ContentMode.HTML);
-			Integer itemId = new Integer(id++);
+			Integer itemId = Integer.valueOf(id++);
 			table.addItem(new Object[] { diseaseid, diseasename, genes }, itemId);
 		}
 
@@ -186,9 +190,8 @@ public class HpoClassTabFactory {
 
 		Collection<String> synonyms = dataProvider.getSynonyms();
 		if (synonyms.size() < 1) {
-			Label suggestSyn = new Label(
-					"Currently the HPO does not have any synonyms for this class. "
-							+ "Suggest a synonym at our <a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>",
+			Label suggestSyn = new Label("Currently the HPO does not have any synonyms for this class. "
+					+ "Suggest a synonym at our <a href='https://github.com/obophenotype/human-phenotype-ontology/issues/' target='_new'>github tracker</a>",
 					ContentMode.HTML);
 			suggestSyn.addStyleName("tab-content-content");
 			vl_syns.addComponent(suggestSyn);
@@ -223,8 +226,8 @@ public class HpoClassTabFactory {
 		 * Secondary ID
 		 */
 		Label lab2 = new Label("Alternative IDs");
-		lab2.setDescription("These are other identifiers which are referring to the same HPO class. "
-				+ "These are introduced when classes are merged.");
+		lab2.setDescription(
+				"These are other identifiers which are referring to the same HPO class. " + "These are introduced when classes are merged.");
 		lab2.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab2.addStyleName("tab-content-header");
 
@@ -240,8 +243,9 @@ public class HpoClassTabFactory {
 		 * PURLs
 		 */
 		Label lab3 = new Label("PURL");
-		lab3.setDescription("This is a persistent URL. Please see <a href='https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator' target='_new'>"
-				+ "this wikipedia article</a> for more information on PURLs.");
+		lab3.setDescription(
+				"This is a persistent URL. Please see <a href='https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator' target='_new'>"
+						+ "this wikipedia article</a> for more information on PURLs.");
 		lab3.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab3.addStyleName("tab-content-header");
 		Label iriLabel = new Label("<a href='" + dataProvider.getIRI() + "' target='_new'>" + dataProvider.getIRI() + "</a>", ContentMode.HTML);
@@ -282,7 +286,8 @@ public class HpoClassTabFactory {
 		 * Logical def
 		 */
 		Label lab2 = new Label("Logical definition");
-		lab2.setDescription("This is a computer readable logical definition of the HPO class. If you want to learn more about this please see <a href='http://nar.oxfordjournals.org/content/42/D1/D966.full' target='_new'>http://nar.oxfordjournals.org/content/42/D1/D966.full</a>.");
+		lab2.setDescription(
+				"This is a computer readable logical definition of the HPO class. If you want to learn more about this please see <a href='http://nar.oxfordjournals.org/content/42/D1/D966.full' target='_new'>http://nar.oxfordjournals.org/content/42/D1/D966.full</a>.");
 		lab2.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab2.addStyleName("tab-content-header");
 
@@ -317,8 +322,8 @@ public class HpoClassTabFactory {
 		Collection<String> superClassesHtmlString = convertToHtml(superClasses, CONSTANTS.rootLocation);
 		Collection<String> subClassesHtmlString = convertToHtml(subClasses, CONSTANTS.rootLocation);
 
-		addLabelsSupSub(superClassesHtmlString, "Superclasses", vlSubSuperClasses);
-		addLabelsSupSub(subClassesHtmlString, "Subclasses", vlSubSuperClasses);
+		addLabelsSupSub(superClassesHtmlString, "Superclasses", vlSubSuperClasses, superClasses);
+		addLabelsSupSub(subClassesHtmlString, "Subclasses", vlSubSuperClasses, subClasses);
 
 		vlSubSuperClasses.addStyleName("tab-content-vl");
 		return vlSubSuperClasses;
@@ -328,7 +333,7 @@ public class HpoClassTabFactory {
 		VerticalLayout vlSubSuperClasses = new VerticalLayout();
 		Collection<OWLClass> superClasses = dataProvider.getSuperClasses();
 		Collection<String> superClassesHtmlString = convertToHtml(superClasses, CONSTANTS.rootLocation);
-		addLabelsSupSub(superClassesHtmlString, "Superclasses", vlSubSuperClasses);
+		addLabelsSupSub(superClassesHtmlString, "Superclasses", vlSubSuperClasses, superClasses);
 		vlSubSuperClasses.addStyleName("tab-content-vl");
 		return vlSubSuperClasses;
 	}
@@ -337,12 +342,13 @@ public class HpoClassTabFactory {
 		VerticalLayout vlSubSuperClasses = new VerticalLayout();
 		Collection<OWLClass> subClasses = dataProvider.getSubClasses();
 		Collection<String> subClassesHtmlString = convertToHtml(subClasses, CONSTANTS.rootLocation);
-		addLabelsSupSub(subClassesHtmlString, "Subclasses", vlSubSuperClasses);
+		addLabelsSupSub(subClassesHtmlString, "Subclasses", vlSubSuperClasses, subClasses);
 		vlSubSuperClasses.addStyleName("tab-content-vl");
 		return vlSubSuperClasses;
 	}
 
-	private void addLabelsSupSub(Collection<String> superClassesHtmlString, String string, VerticalLayout vlSubSuperClasses) {
+	private void addLabelsSupSub(Collection<String> superClassesHtmlString, String string, VerticalLayout vlSubSuperClasses,
+			Collection<OWLClass> classes) {
 		/*
 		 * Super or sub classes
 		 */
@@ -355,6 +361,14 @@ public class HpoClassTabFactory {
 			labelSuperclasses.addStyleName("tab-content-content");
 			vlSubSuperClasses.addComponent(labelSuperclasses);
 		}
+
+		// for (OWLClass c : classes) {
+		// String id = OboUtil.IRI2ID(c.getIRI());
+		// String label = hpData.getExtOwlOntology().getLabel(c.getIRI());
+		// Button b = new Button(label);
+		// b.addClickListener(new UpdatePageClickListener(id, label));
+		// vlSubSuperClasses.addComponent(b);
+		// }
 
 	}
 

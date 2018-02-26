@@ -20,6 +20,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.jsclipboard.JSClipboard;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -168,9 +169,9 @@ public class HpowebUI extends UI {
 		 * Bottom part
 		 */
 		Label version = new Label("Ontology version: " + ontologyVersion);
-		Label copyright = new Label("Copyright 2017 -  Sebastian Köhler & The Human Phenotype Ontology Project");
-		Link feedback = new Link("Question, Comments, Feedback: dr.sebastian.koehler@gmail.com",
-				new com.vaadin.server.ExternalResource("http://drseb.github.io/"));
+		Label copyright = new Label("Copyright 2018 -  Sebastian Köhler & The Phenomics Group Berlin");
+		Link feedback = new Link("Contact: dr.sebastian.koehler@gmail.com",
+				new ExternalResource("http://phenomics.github.io/"));
 		addLabelRow(gridContainer, version);
 		addLabelRow(gridContainer, copyright);
 		addLabelRow(gridContainer, feedback);
