@@ -7,11 +7,12 @@ import com.sebworks.vaadstrap.Col;
 import com.sebworks.vaadstrap.ColMod;
 import com.sebworks.vaadstrap.Container;
 import com.sebworks.vaadstrap.Row;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hpoweb.data.dataprovider.IDiseaseDataProvider;
@@ -20,6 +21,7 @@ import hpoweb.uicontent.table.HpoClassTableEntry;
 import hpoweb.uicontent.tabs.TabsUtil;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
+import hpoweb.util.UpdatePageClickListener;
 
 public class DiseaseTabFactory {
 
@@ -64,13 +66,25 @@ public class DiseaseTabFactory {
 			Label l = new Label("No genes associated with this disease.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		} else {
+		}
+		else {
 			for (DiseaseGene gene : genes) {
-				Label l = new Label(gene.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?"
-						+ CONSTANTS.geneRequestId + "=" + gene.getGeneId() + "'>" + gene.getGeneId() + "</a>)",
-						ContentMode.HTML);
-				l.addStyleName("tab-content-content");
-				vl_genes.addComponent(l);
+				// Label l = new Label(gene.getGeneSymbol() + " (<a href='" +
+				// CONSTANTS.rootLocation + "?"
+				// + CONSTANTS.geneRequestId + "=" + gene.getGeneId() + "'>" + gene.getGeneId()
+				// + "</a>)",
+				// ContentMode.HTML);
+				// l.addStyleName("tab-content-content");
+				// vl_genes.addComponent(l);
+
+				String name = gene.getGeneSymbol();
+				Button b = new Button(name + " (" + gene.getGeneId() + ")");
+				b.addStyleName(BaseTheme.BUTTON_LINK);
+				b.addStyleName("left");
+				b.setHeight("20px");
+				b.addClickListener(new UpdatePageClickListener(gene.getGeneId(), CONSTANTS.geneRequestId));
+				vl_genes.addComponent(b);
+
 			}
 		}
 
@@ -142,7 +156,8 @@ public class DiseaseTabFactory {
 			Label l = new Label("No synonyms or alternative names");
 			l.addStyleName("tab-content-content");
 			vl_syns.addComponent(l);
-		} else {
+		}
+		else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");

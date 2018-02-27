@@ -17,6 +17,8 @@ import com.vaadin.ui.TreeTable;
 import hpoweb.data.dataprovider.IEntityDataProvider;
 import hpoweb.uicontent.table.HpoClassTableEntry;
 import hpoweb.uicontent.table.TableLabel;
+import hpoweb.util.CONSTANTS;
+import hpoweb.util.UpdatePageClickListener;
 
 /**
  * @author Sebastian Köhler (dr.sebastian.koehler@gmail.com)
@@ -79,6 +81,9 @@ public class TabsUtil {
 			}
 
 		}
+
+		ttable.addItemClickListener(new UpdatePageClickListener(null, CONSTANTS.hpRequestId));
+
 		return ttable;
 	}
 

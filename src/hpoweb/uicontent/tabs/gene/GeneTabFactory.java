@@ -7,11 +7,12 @@ import com.sebworks.vaadstrap.Col;
 import com.sebworks.vaadstrap.ColMod;
 import com.sebworks.vaadstrap.Container;
 import com.sebworks.vaadstrap.Row;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.annotations.OwlAnnotatedDiseaseEntry;
@@ -20,6 +21,7 @@ import hpoweb.uicontent.table.HpoClassTableEntry;
 import hpoweb.uicontent.tabs.TabsUtil;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
+import hpoweb.util.UpdatePageClickListener;
 
 public class GeneTabFactory {
 
@@ -57,13 +59,27 @@ public class GeneTabFactory {
 			Label l = new Label("No diseases associated with this gene.");
 			l.addStyleName("tab-content-content");
 			vl_genes.addComponent(l);
-		} else {
+		}
+		else {
 			for (OwlAnnotatedDiseaseEntry disease : diseases) {
-				Label l = new Label(disease.getName() + " (<a href='" + CONSTANTS.rootLocation + "?"
-						+ CONSTANTS.diseaseRequestId + "=" + disease.getDiseaseIdAsString() + "'>"
-						+ disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
-				l.addStyleName("tab-content-content");
-				vl_genes.addComponent(l);
+				// Label l = new Label(disease.getName() + " (<a href='" +
+				// CONSTANTS.rootLocation + "?"
+				// + CONSTANTS.diseaseRequestId + "=" + disease.getDiseaseIdAsString() + "'>"
+				// + disease.getDiseaseIdAsString() + "</a>)", ContentMode.HTML);
+				// l.addStyleName("tab-content-content");
+				// vl_genes.addComponent(l);
+
+				String name = disease.getName().toLowerCase();
+				name = name.substring(0, 1).toUpperCase() + name.substring(1);
+				if (name.length() > 40)
+					name = name.substring(0, 40) + "...";
+				Button b = new Button(name + " (" + disease.getDiseaseIdAsString() + ")");
+				b.addStyleName(BaseTheme.BUTTON_LINK);
+				b.addStyleName("left");
+				b.setHeight("20px");
+				b.addClickListener(
+						new UpdatePageClickListener(disease.getDiseaseIdAsString(), CONSTANTS.diseaseRequestId));
+				vl_genes.addComponent(b);
 			}
 		}
 

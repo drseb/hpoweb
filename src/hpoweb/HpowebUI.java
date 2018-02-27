@@ -1,6 +1,7 @@
 package hpoweb;
 
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -22,6 +23,8 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.jsclipboard.JSClipboard;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -65,10 +68,21 @@ import hpoweb.util.TableUtils;
 public class HpowebUI extends UI {
 
 	private static final boolean doParseHpo = true;
+
 	private final static Object block = new Object();
 
 	private static HpData hpData = null;
-	private GoogleAnalyticsTracker tracker;
+	private static GoogleAnalyticsTracker tracker;
+
+	private static Label version;
+
+	private static Label copyright;
+
+	private static Link feedback;
+
+	private static LazyComboBox<SearchableEntity> searchBar;
+
+	public static Container gridContainer;
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = HpowebUI.class)
@@ -78,6 +92,15 @@ public class HpowebUI extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 
+		setSizeFull();
+		/*
+		 * Add google tracker
+		 */
+		addTracker();
+
+		/*
+		 * ************* Constant part comes here
+		 */
 		/*
 		 * Init hpo data
 		 */
@@ -88,23 +111,64 @@ public class HpowebUI extends UI {
 			}
 		}
 
+		String ontologyVersion;
+		if (doParseHpo) {
+			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
+		}
+		else {
+			ontologyVersion = "some ontology version here";
+		}
+		version = new Label("Ontology version: " + ontologyVersion);
+		copyright = new Label("Copyright 2018 -  Sebastian Köhler & The Phenomics Group Berlin");
+		feedback = new Link("Contact: dr.sebastian.koehler@gmail.com",
+				new ExternalResource("http://phenomics.github.io/"));
+
+		SearchBarFactory searchbarFactory = new SearchBarFactory();
+		searchBar = searchbarFactory.getSearchBar(hpData);
+		searchBar.setWidth("100%");
+
 		/*
 		 * Set the site url template
 		 */
-		String rootLocation = Page.getCurrent().getLocation().toString();
-		if (rootLocation.contains("?")) {
-			rootLocation = rootLocation.replaceAll("\\?.+", "");
-		}
+		String location = Page.getCurrent().getLocation().toString();
+		String rootLocation = location.replaceAll("\\?.+", "");
+		rootLocation = rootLocation.replaceAll("\\#.+", "");
 
 		CONSTANTS.rootLocation = rootLocation;
 
-		Map<String, String[]> parameterMap = request.getParameterMap();
+		Page page = HpowebUI.get().getPage();
+		String uriFragment = page.getUriFragment();
+		if (uriFragment == null || uriFragment.equals("")) {
+			putParametersIntoUriFragment(request);
+		}
+		uriFragment = page.getUriFragment();
+		/************************
+		 * Now the content displayed
+		 */
 
-		setSizeFull();
-
-		Container gridContainer = new Container();
+		gridContainer = refreshContent(uriFragment);
 
 		setContent(gridContainer);
+
+		page.addUriFragmentChangedListener(new UriFragmentChangedListener() {
+			public void uriFragmentChanged(UriFragmentChangedEvent source) {
+				System.out.println("got a change in uri fragment here");
+				Page page = HpowebUI.get().getPage();
+				String uriFragment = page.getUriFragment();
+				gridContainer = refreshContent(uriFragment);
+				setContent(gridContainer);
+			}
+		});
+
+	}
+
+	/**
+	 * @param uriFragment
+	 * @return
+	 */
+	public static Container refreshContent(String uriFragment) {
+
+		gridContainer = new Container();
 
 		// just a line that disappears on small devices
 		addHorizontalLine(gridContainer);
@@ -112,12 +176,9 @@ public class HpowebUI extends UI {
 		/*
 		 * Add search bar on top
 		 */
-		addSearchbar(gridContainer);
-
-		/*
-		 * Add google tracker
-		 */
-		addTracker();
+		Row r = gridContainer.addRow();
+		Col c = r.addCol();
+		c.addComponent(searchBar);
 
 		// just a line that disappears on small devices
 		addHorizontalLine(gridContainer);
@@ -125,9 +186,10 @@ public class HpowebUI extends UI {
 		/*
 		 * Data provider initialization
 		 */
-		IEntityDataProvider dataProvider = setupDataProvider(request, parameterMap);
+		IEntityDataProvider dataProvider = setupDataProvider(uriFragment);
+
 		if (dataProvider == null)
-			return;
+			return gridContainer;
 
 		addInfoLabels(gridContainer, dataProvider);
 
@@ -142,11 +204,13 @@ public class HpowebUI extends UI {
 			hpoClassTabFactory.addTermInfoElements(gridContainer, (IHpClassDataProvider) dataProvider);
 
 			addExtraButtons(gridContainer, (IHpClassDataProvider) dataProvider);
-		} else if (dataProvider instanceof IDiseaseDataProvider) {
+		}
+		else if (dataProvider instanceof IDiseaseDataProvider) {
 
 			DiseaseTabFactory diseaseTabFactory = new DiseaseTabFactory(tableUtils);
 			diseaseTabFactory.addDiseaseInfoElements(gridContainer, (IDiseaseDataProvider) dataProvider);
-		} else if (dataProvider instanceof IGeneDataProvider) {
+		}
+		else if (dataProvider instanceof IGeneDataProvider) {
 
 			GeneTabFactory geneTabFactory = new GeneTabFactory(tableUtils);
 			geneTabFactory.addGeneInfoElements(gridContainer, (IGeneDataProvider) dataProvider);
@@ -155,30 +219,35 @@ public class HpowebUI extends UI {
 
 		// just a line that disappears on small devices
 		addHorizontalLine(gridContainer);
-
-		String ontologyVersion;
-		if (doParseHpo) {
-			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
-		} else
-
-		{
-			ontologyVersion = "some ontology version here";
-		}
-
-		/*
-		 * Bottom part
-		 */
-		Label version = new Label("Ontology version: " + ontologyVersion);
-		Label copyright = new Label("Copyright 2018 -  Sebastian Köhler & The Phenomics Group Berlin");
-		Link feedback = new Link("Contact: dr.sebastian.koehler@gmail.com",
-				new ExternalResource("http://phenomics.github.io/"));
 		addLabelRow(gridContainer, version);
 		addLabelRow(gridContainer, copyright);
 		addLabelRow(gridContainer, feedback);
-
+		return gridContainer;
 	}
 
-	private void addLabelRow(Container gridContainer, Component label) {
+	/**
+	 * @param request
+	 */
+	private void putParametersIntoUriFragment(VaadinRequest request) {
+		Page page = HpowebUI.get().getPage();
+
+		if (request.getParameterMap().containsKey(CONSTANTS.hpRequestId)) {
+			String hpId = request.getParameter(CONSTANTS.hpRequestId);
+			if (hpId.contains(":"))
+				hpId = hpId.replaceAll(":", "_");
+			page.setUriFragment(CONSTANTS.hpRequestId + "=" + hpId, false);
+		}
+		else if (request.getParameterMap().containsKey(CONSTANTS.geneRequestId)) {
+			String hpId = request.getParameter(CONSTANTS.geneRequestId);
+			page.setUriFragment(CONSTANTS.geneRequestId + "=" + hpId, false);
+		}
+		else if (request.getParameterMap().containsKey(CONSTANTS.diseaseRequestId)) {
+			String hpId = request.getParameter(CONSTANTS.diseaseRequestId);
+			page.setUriFragment(CONSTANTS.diseaseRequestId + "=" + hpId, false);
+		}
+	}
+
+	private static void addLabelRow(Container gridContainer, Component label) {
 		Row r = gridContainer.addRow();
 		Col c = r.addCol();
 		c.addComponent(label);
@@ -187,7 +256,7 @@ public class HpowebUI extends UI {
 		label.addStyleName(ValoTheme.LABEL_SMALL);
 	}
 
-	private void addExtraButtons(Container gridContainer, IHpClassDataProvider dataProvider) {
+	private static void addExtraButtons(Container gridContainer, IHpClassDataProvider dataProvider) {
 
 		Row r = gridContainer.addRow();
 		r.setWidth("100%");
@@ -215,7 +284,7 @@ public class HpowebUI extends UI {
 
 	}
 
-	private Button getGraphViewButton(IHpClassDataProvider dataProvider) {
+	private static Button getGraphViewButton(IHpClassDataProvider dataProvider) {
 
 		Button b = new Button("Graph view");
 		b.addClickListener(new Button.ClickListener() {
@@ -243,31 +312,41 @@ public class HpowebUI extends UI {
 		return b;
 	}
 
-	private IEntityDataProvider setupDataProvider(VaadinRequest request, Map<String, String[]> parameterMap) {
+	private static IEntityDataProvider setupDataProvider(String uriFragment) {
+
+		if (uriFragment == null || uriFragment.equals(""))
+			return null;
+
+		System.out.println("got fragment: " + uriFragment);
 		IEntityDataProvider dataProvider = null;
+		Pattern hpPattern = Pattern.compile(CONSTANTS.hpRequestId + "=(HP.+)");
+		Matcher hpMatcher = hpPattern.matcher(uriFragment);
+		Pattern genePattern = Pattern.compile(CONSTANTS.geneRequestId + "=(\\d+)");
+		Matcher geneMatcher = genePattern.matcher(uriFragment);
+		Pattern diseasePattern = Pattern.compile(CONSTANTS.diseaseRequestId + "=(.+)");
+		Matcher diseaseMatcher = diseasePattern.matcher(uriFragment);
+		if (hpMatcher.find()) {
 
-		if (parameterMap.containsKey(CONSTANTS.hpRequestId)) {
-
-			OWLClass hpClass = parseHpId(request);
+			OWLClass hpClass = parseHpId(hpMatcher.group(1));
 			if (hpClass == null && doParseHpo) {
-				new Notification("Invalid HPO id input",
-						"<br/><br/>Can't parse HPO id from '" + request.getParameter(CONSTANTS.hpRequestId) + "'",
+				new Notification("Invalid HPO id input", "<br/><br/>Can't parse HPO id from '" + uriFragment + "'",
 						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return null;
 			}
 
 			if (doParseHpo) {
 				dataProvider = new HpClassDataProvider(hpClass, hpData);
-			} else {
+			}
+			else {
 				dataProvider = new FakeHpClassDataProvider();
 			}
 
-		} else if (parameterMap.containsKey(CONSTANTS.geneRequestId)) {
+		}
+		else if (geneMatcher.find()) {
 
-			Integer geneId = parseGeneId(request);
+			Integer geneId = parseGeneId(geneMatcher.group(1));
 			if (geneId == null && doParseHpo) {
-				new Notification("Invalid gene id input",
-						"<br/><br/>Can't parse gene id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
+				new Notification("Invalid gene id input", "<br/><br/>Can't parse gene id from '" + uriFragment + "'",
 						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 				return null;
 			}
@@ -275,26 +354,30 @@ public class HpowebUI extends UI {
 			if (doParseHpo) {
 
 				dataProvider = new GeneDataProvider(geneId, hpData);
-			} else {
+			}
+			else {
 				dataProvider = new FakeGeneDataProvider();
 			}
 
-		} else if (parameterMap.containsKey(CONSTANTS.diseaseRequestId)) {
+		}
+		else if (diseaseMatcher.find()) {
 
-			ItemId diseaseId = parseDiseaseId(request);
+			ItemId diseaseId = parseDiseaseId(diseaseMatcher.group(1));
 			if (diseaseId == null && doParseHpo) {
 				new Notification("Invalid disease id input",
-						"<br/><br/>Can't parse disease id from '" + request.getParameter(CONSTANTS.geneRequestId) + "'",
-						Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
+						"<br/><br/>Can't parse disease id from '" + uriFragment + "'", Notification.Type.ERROR_MESSAGE,
+						true).show(Page.getCurrent());
 				return null;
 			}
 
 			if (doParseHpo) {
 				dataProvider = new DiseaseDataProvider(diseaseId, hpData);
-			} else {
+			}
+			else {
 				dataProvider = new FakeDiseaseDataProvider();
 			}
-		} else {
+		}
+		else {
 			new Notification("Invalid URL",
 					"<br/><br/>You have to provide one URL parameter (" + CONSTANTS.hpRequestId + ","
 							+ CONSTANTS.geneRequestId + ", or " + CONSTANTS.diseaseRequestId + ") ! ",
@@ -304,16 +387,7 @@ public class HpowebUI extends UI {
 		return dataProvider;
 	}
 
-	private void addSearchbar(Container gridContainer) {
-		SearchBarFactory searchbarFactory = new SearchBarFactory();
-		LazyComboBox<SearchableEntity> searchBar = searchbarFactory.getSearchBar(hpData);
-		searchBar.setWidth("100%");
-		Row r = gridContainer.addRow();
-		Col c = r.addCol();
-		c.addComponent(searchBar);
-	}
-
-	private void addInfoLabels(Container gridContainer, IEntityDataProvider dataProvider) {
+	private static void addInfoLabels(Container gridContainer, IEntityDataProvider dataProvider) {
 		Label info1 = new Label("Infopage for " + dataProvider.getTypeOfEntityString());
 		Label info2 = new Label(dataProvider.getLabel());
 		info1.addStyleName(ValoTheme.LABEL_LIGHT);
@@ -333,7 +407,7 @@ public class HpowebUI extends UI {
 	 * 
 	 * @param gridContainer
 	 */
-	private void addHorizontalLine(Container gridContainer) {
+	private static void addHorizontalLine(Container gridContainer) {
 		Row row1 = gridContainer.addRow();
 		row1.setWidth("100%");
 		Col col12 = row1.addCol(VisibilityMod.HIDDEN_SM, VisibilityMod.HIDDEN_XS);
@@ -353,7 +427,7 @@ public class HpowebUI extends UI {
 	 * Not sure this is really elegant ;-)
 	 * 
 	 */
-	private Button getCopyPasteButton(final String id, final String label) {
+	private static Button getCopyPasteButton(final String id, final String label) {
 		final JSClipboard clipboard = new JSClipboard();
 
 		Button b = new Button("Copy Id/Label");
@@ -394,29 +468,27 @@ public class HpowebUI extends UI {
 		return b;
 	}
 
-	private OWLClass parseHpId(VaadinRequest request) {
+	private static OWLClass parseHpId(String matchedPartOfUri) {
 
 		if (!doParseHpo)
 			return null;
 
-		String hpId = request.getParameter(CONSTANTS.hpRequestId);
-		if (hpId == null || (!hpId.startsWith("HP"))) {
+		if (matchedPartOfUri == null || (!matchedPartOfUri.startsWith("HP"))) {
 			return null;
 		}
 
-		OWLClass x = hpData.getExtOwlOntology().getClassForId(hpId);
+		OWLClass x = hpData.getExtOwlOntology().getClassForId(matchedPartOfUri);
 		return x;
 	}
 
-	private Integer parseGeneId(VaadinRequest request) {
+	private static Integer parseGeneId(String matchedPartOfUri) {
 
 		if (!doParseHpo)
 			return null;
 
-		String geneId = request.getParameter(CONSTANTS.geneRequestId);
 		Integer geneIdInt = null;
 		try {
-			geneIdInt = Integer.parseInt(geneId);
+			geneIdInt = Integer.parseInt(matchedPartOfUri);
 		} catch (NumberFormatException nfe) {
 			return null;
 		}
@@ -427,16 +499,20 @@ public class HpowebUI extends UI {
 		return geneIdInt;
 	}
 
-	private ItemId parseDiseaseId(VaadinRequest request) {
+	private static ItemId parseDiseaseId(String matchedPartOfUri) {
 		if (!doParseHpo)
 			return null;
-		String diseaseIdStr = request.getParameter(CONSTANTS.diseaseRequestId);
 
-		ItemId diseaseId = new ItemId(diseaseIdStr);
+		System.out.println("parse disease id form  " + matchedPartOfUri);
+		ItemId diseaseId = new ItemId(matchedPartOfUri);
 		if (!hpData.getAnnotationUtils().getDiseaseId2entry().containsKey(diseaseId)) {
 			return null;
 		}
 
 		return diseaseId;
+	}
+
+	public static HpowebUI get() {
+		return (HpowebUI) UI.getCurrent();
 	}
 }

@@ -13075,6 +13075,10 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
+.hpoweb .v-button-left {
+	text-align: left;
+}
+
 .hpoweb .tab-content-vl {
 	background-color: white;
 	border: solid 1px lightgray;

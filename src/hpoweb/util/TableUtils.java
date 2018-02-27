@@ -76,8 +76,7 @@ public class TableUtils {
 			String nameShort = disease.getName();
 			if (nameShort.length() > 40)
 				nameShort = nameShort.substring(0, 40) + "...";
-			String diseaseStr = nameShort + " (<a href='" + oldLocation + "?" + CONSTANTS.diseaseRequestId + "="
-					+ disease.getDiseaseIdAsString() + "'>" + disease.getDiseaseIdAsString() + "</a>)";
+			String diseaseStr = nameShort + " (" + disease.getDiseaseIdAsString() + ")";
 			elems.add(diseaseStr);
 		}
 

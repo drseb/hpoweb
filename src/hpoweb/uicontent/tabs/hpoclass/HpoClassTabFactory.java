@@ -8,15 +8,18 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import com.google.common.base.Joiner;
+import com.google.gwt.dev.util.collect.HashMap;
 import com.sebworks.vaadstrap.Col;
 import com.sebworks.vaadstrap.ColMod;
 import com.sebworks.vaadstrap.Container;
 import com.sebworks.vaadstrap.Row;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.charite.phenowl.hpowl.util.OboUtil;
@@ -28,6 +31,7 @@ import hpoweb.uicontent.table.GeneDiseaseTableEntry;
 import hpoweb.uicontent.table.TableLabel;
 import hpoweb.util.CONSTANTS;
 import hpoweb.util.TableUtils;
+import hpoweb.util.UpdatePageClickListener;
 
 public class HpoClassTabFactory {
 
@@ -114,8 +118,7 @@ public class HpoClassTabFactory {
 
 		int id = 0;
 		for (GeneDiseaseTableEntry entry : tableContent) {
-			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (<a href='" + CONSTANTS.rootLocation + "?"
-					+ CONSTANTS.geneRequestId + "=" + entry.getGeneId() + "'>" + entry.getGeneId() + "</a>)",
+			TableLabel geneEntry = new TableLabel(entry.getGeneSymbol() + " (" + entry.getGeneId() + ")",
 					ContentMode.HTML);
 
 			String diseasesString = tableUtils.getDiseasesAsHtmlString(entry.getAssociatedDiseases(),
@@ -125,6 +128,7 @@ public class HpoClassTabFactory {
 			Integer itemId = Integer.valueOf(id++);
 			table.addItem(new Object[] { geneEntry, diseases }, itemId);
 		}
+		table.addItemClickListener(new UpdatePageClickListener(null, CONSTANTS.geneRequestId));
 
 		tableVL.addComponent(table);
 
@@ -159,25 +163,22 @@ public class HpoClassTabFactory {
 		}
 
 		Table table = new Table();
-		table.addContainerProperty("Disease id", TableLabel.class, null);
+		String diseaseIdPropertyId = "Disease id";
+		table.addContainerProperty(diseaseIdPropertyId, TableLabel.class, null);
 		table.addContainerProperty("Disease name", TableLabel.class, null);
-		table.addContainerProperty("Associated genes", TableLabel.class, null);
 		table.setSizeFull();
 		table.setHeight("275px");
 
 		int id = 0;
+		HashMap<Integer, String> itemid2diseaseid = new HashMap<>();
 		for (DiseaseGeneTableEntry entry : tableContent) {
-			TableLabel diseaseid = new TableLabel("<a href='" + CONSTANTS.rootLocation + "?"
-					+ CONSTANTS.diseaseRequestId + "=" + entry.getDiseaseId() + "'>" + entry.getDiseaseId() + "</a>",
-					ContentMode.HTML);
+			TableLabel diseaseid = new TableLabel(entry.getDiseaseId(), ContentMode.HTML);
 			TableLabel diseasename = new TableLabel(entry.getDiseaseName(), ContentMode.HTML);
-
-			String genesString = tableUtils.getGenesAsHtmlString(entry.getAssociatedGenes(), CONSTANTS.rootLocation);
-
-			TableLabel genes = new TableLabel(genesString, ContentMode.HTML);
 			Integer itemId = Integer.valueOf(id++);
-			table.addItem(new Object[] { diseaseid, diseasename, genes }, itemId);
+			table.addItem(new Object[] { diseaseid, diseasename }, itemId);
+			itemid2diseaseid.put(itemId, entry.getDiseaseId());
 		}
+		table.addItemClickListener(new UpdatePageClickListener(null, CONSTANTS.diseaseRequestId));
 
 		tableVL.addComponent(table);
 
@@ -208,7 +209,8 @@ public class HpoClassTabFactory {
 					ContentMode.HTML);
 			suggestSyn.addStyleName("tab-content-content");
 			vl_syns.addComponent(suggestSyn);
-		} else {
+		}
+		else {
 			for (String synoym : synonyms) {
 				Label l = new Label(synoym);
 				l.addStyleName("tab-content-content");
@@ -371,19 +373,22 @@ public class HpoClassTabFactory {
 		lab1.addStyleName(ValoTheme.LABEL_LIGHT);
 		lab1.addStyleName("tab-content-header");
 		vlSubSuperClasses.addComponent(lab1);
-		for (String l : superClassesHtmlString) {
-			Label labelSuperclasses = new Label(l, ContentMode.HTML);
-			labelSuperclasses.addStyleName("tab-content-content");
-			vlSubSuperClasses.addComponent(labelSuperclasses);
-		}
-
-		// for (OWLClass c : classes) {
-		// String id = OboUtil.IRI2ID(c.getIRI());
-		// String label = hpData.getExtOwlOntology().getLabel(c.getIRI());
-		// Button b = new Button(label);
-		// b.addClickListener(new UpdatePageClickListener(id, label));
-		// vlSubSuperClasses.addComponent(b);
+		// for (String l : superClassesHtmlString) {
+		// Label labelSuperclasses = new Label(l, ContentMode.HTML);
+		// labelSuperclasses.addStyleName("tab-content-content");
+		// vlSubSuperClasses.addComponent(labelSuperclasses);
 		// }
+
+		for (OWLClass c : classes) {
+			String id = OboUtil.IRI2ID(c.getIRI());
+			String label = hpData.getExtOwlOntology().getLabel(c.getIRI());
+			Button b = new Button(label);
+			b.addStyleName(BaseTheme.BUTTON_LINK);
+			b.addStyleName("left");
+			b.setHeight("20px");
+			b.addClickListener(new UpdatePageClickListener(id, CONSTANTS.hpRequestId));
+			vlSubSuperClasses.addComponent(b);
+		}
 
 	}
 
@@ -397,7 +402,8 @@ public class HpoClassTabFactory {
 						+ RandomStringUtils.randomAlphabetic(10).toUpperCase() + "</a>";
 				htmlList.add(str);
 			}
-		} else {
+		}
+		else {
 			// it's ugly to use hpData here, but the dataprovider doesn't know
 			// the labels for the parents/children
 			for (OWLClass c : classes) {

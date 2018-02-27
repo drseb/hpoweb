@@ -38,6 +38,10 @@ $v-app-loading-text: "Loading HPO data... please wait";
 
   // Insert your own theme rules here
 
+.v-button-left {
+  text-align: left;
+}
+
 	.tab-content-vl{
 		background-color: white;
    		border: solid 1px lightgray;
