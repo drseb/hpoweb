@@ -99,7 +99,7 @@ public class UpdatePageClickListener
 	 */
 	private void updateUi(String searchParameter, String searchValue) {
 
-		HpowebUI.get().access(new Runnable() {
+		HpowebUI.get().accessSynchronously(new Runnable() {
 
 			@Override
 			public void run() {
