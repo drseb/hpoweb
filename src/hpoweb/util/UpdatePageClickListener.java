@@ -104,7 +104,10 @@ public class UpdatePageClickListener
 			@Override
 			public void run() {
 				Page page = HpowebUI.get().getPage();
-				page.setUriFragment(searchParameter + "=" + searchValue, false);
+				HpowebUI.get().getSession().lock();
+				page.setUriFragment(searchParameter + "=" + searchValue, true);
+				HpowebUI.get().getSession().unlock();
+
 			}
 		});
 
