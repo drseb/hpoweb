@@ -151,6 +151,7 @@ public class HpowebUI extends UI {
 		setContent(gridContainer);
 
 		page.addUriFragmentChangedListener(new UriFragmentChangedListener() {
+			@Override
 			public void uriFragmentChanged(UriFragmentChangedEvent source) {
 				System.out.println("got a change in uri fragment here");
 				Page page = HpowebUI.get().getPage();
