@@ -99,17 +99,8 @@ public class UpdatePageClickListener
 	 */
 	private void updateUi(String searchParameter, String searchValue) {
 
-		HpowebUI.get().accessSynchronously(new Runnable() {
-
-			@Override
-			public void run() {
-				Page page = HpowebUI.get().getPage();
-				HpowebUI.get().getSession().lock();
-				page.setUriFragment(searchParameter + "=" + searchValue, true);
-				HpowebUI.get().getSession().unlock();
-
-			}
-		});
+		Page page = HpowebUI.get().getPage();
+		page.setUriFragment(searchParameter + "=" + searchValue, true);
 
 	}
 
