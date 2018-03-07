@@ -72,22 +72,15 @@ public class HpowebUI extends UI {
 	private final static Object block = new Object();
 
 	private static HpData hpData = null;
-	private static GoogleAnalyticsTracker tracker;
-
-	private static Label version;
-
-	private static Label copyright;
-
-	private static Link feedback;
-
-	private static LazyComboBox<SearchableEntity> searchBar;
-
-	public static Container gridContainer;
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = HpowebUI.class)
 	public static class Servlet extends VaadinServlet {
 	}
+
+	private static String ontologyVersion;
+
+	private GoogleAnalyticsTracker tracker;
 
 	@Override
 	protected void init(VaadinRequest request) {
@@ -111,21 +104,12 @@ public class HpowebUI extends UI {
 			}
 		}
 
-		String ontologyVersion;
 		if (doParseHpo) {
 			ontologyVersion = hpData.getExtOwlOntology().getOntologyVersionIri().toString();
 		}
 		else {
 			ontologyVersion = "some ontology version here";
 		}
-		version = new Label("Ontology version: " + ontologyVersion);
-		copyright = new Label("Copyright 2018 -  Sebastian Köhler & The Phenomics Group Berlin");
-		feedback = new Link("Contact: dr.sebastian.koehler@gmail.com",
-				new ExternalResource("http://phenomics.github.io/"));
-
-		SearchBarFactory searchbarFactory = new SearchBarFactory();
-		searchBar = searchbarFactory.getSearchBar(hpData);
-		searchBar.setWidth("100%");
 
 		/*
 		 * Set the site url template
@@ -142,12 +126,11 @@ public class HpowebUI extends UI {
 			putParametersIntoUriFragment(request);
 		}
 		uriFragment = page.getUriFragment();
+
 		/************************
 		 * Now the content displayed
 		 */
-
-		gridContainer = refreshContent(uriFragment);
-
+		Container gridContainer = getContentContainer(uriFragment);
 		setContent(gridContainer);
 
 		page.addUriFragmentChangedListener(new UriFragmentChangedListener() {
@@ -156,8 +139,8 @@ public class HpowebUI extends UI {
 				System.out.println("got a change in uri fragment here");
 				Page page = HpowebUI.get().getPage();
 				String uriFragment = page.getUriFragment();
-				gridContainer = refreshContent(uriFragment);
-				setContent(gridContainer);
+				Container newGridContainer = getContentContainer(uriFragment);
+				setContent(newGridContainer);
 			}
 		});
 
@@ -167,9 +150,15 @@ public class HpowebUI extends UI {
 	 * @param uriFragment
 	 * @return
 	 */
-	public static Container refreshContent(String uriFragment) {
+	public static Container getContentContainer(String uriFragment) {
 
-		gridContainer = new Container();
+		SearchBarFactory searchbarFactory = new SearchBarFactory();
+		LazyComboBox<SearchableEntity> searchBar = searchbarFactory.getSearchBar(hpData);
+		searchBar.setWidth("100%");
+
+		Container gridContainer = new Container();
+
+		gridContainer.removeAllComponents();
 
 		// just a line that disappears on small devices
 		addHorizontalLine(gridContainer);
@@ -217,6 +206,11 @@ public class HpowebUI extends UI {
 			geneTabFactory.addGeneInfoElements(gridContainer, (IGeneDataProvider) dataProvider);
 
 		}
+
+		Label version = new Label("Ontology version: " + ontologyVersion);
+		Label copyright = new Label("Copyright 2018 -  Sebastian Köhler & The Phenomics Group Berlin");
+		Link feedback = new Link("Contact: dr.sebastian.koehler@gmail.com",
+				new ExternalResource("http://phenomics.github.io/"));
 
 		// just a line that disappears on small devices
 		addHorizontalLine(gridContainer);
