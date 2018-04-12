@@ -24,7 +24,7 @@
 				</url>
 			</dual>
 		</chain>
-	</resolvers>
+	</resolvers> 
 	<modules>
 		<!-- Vaadin patched SmartSprites -->
 		<module organisation="com.carrotsearch" name="smartsprites"

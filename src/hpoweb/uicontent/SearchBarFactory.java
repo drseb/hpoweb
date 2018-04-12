@@ -36,15 +36,14 @@ public class SearchBarFactory implements Serializable {
 			}
 		};
 
-		final LazyComboBox<SearchableEntity> cb = new LazyComboBox<SearchableEntity>(SearchableEntity.class,
-				filterablePagingProvider, filterableCountProvider)
-						.setCaptionGenerator(new CaptionGenerator<SearchableEntity>() {
+		final LazyComboBox<SearchableEntity> cb = new LazyComboBox<SearchableEntity>(SearchableEntity.class, filterablePagingProvider,
+				filterableCountProvider).setCaptionGenerator(new CaptionGenerator<SearchableEntity>() {
 
-							@Override
-							public String getCaption(SearchableEntity option) {
-								return option.toString();
-							}
-						});
+					@Override
+					public String getCaption(SearchableEntity option) {
+						return option.toString();
+					}
+				});
 
 		cb.setInputPrompt("Enter search terms ...");
 
